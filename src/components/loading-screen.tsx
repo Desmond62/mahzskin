@@ -52,12 +52,11 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               key={index}
               className={`text-4xl sm:text-6xl md:text-8xl font-bold transition-all duration-500 ${
                 index <= currentIndex
-                  ? "text-yellow-400 opacity-100 scale-100"
+                  ? "text-[#E6C6B4 ] opacity-100 scale-100"
                   : "text-gray-600 opacity-30 scale-75"
               }`}
               style={{
                 fontFamily: "serif",
-                textShadow: "0 0 20px rgba(255, 193, 7, 0.5)",
                 transitionDelay: `${index * 100}ms`,
               }}
             >
@@ -67,7 +66,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
         </div>
 
         <div
-          className={`text-yellow-400/80 text-lg md:text-xl font-light tracking-widest transition-all duration-500 ${
+          className={`text-[#E6C6B4 ] text-lg md:text-xl font-light tracking-widest transition-all duration-500 ${
             currentIndex >= letters.length - 1
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-4"
@@ -80,7 +79,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           {[0, 1, 2].map((dot) => (
             <div
               key={dot}
-              className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"
+              className="w-2 h-2 bg-[#E6C6B4 ] rounded-full animate-pulse"
               style={{
                 animationDelay: `${dot * 200}ms`,
                 animationDuration: "1s",

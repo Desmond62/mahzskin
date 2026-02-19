@@ -80,8 +80,8 @@ export default function HomePage() {
                 <span className="text-primary">Ranges</span> */}
               </h1>
               <p className="text-lg text-muted-foreground max-w-md">
-               Purely thoughtful formulations. Designed for long-term skin health
-Created to enhance your skin’s natural richness — never erase it.
+               Purely thoughtful formulations. Designed for long-term skin health,
+created to enhance your skin’s natural richness.
               </p>
               <div className="flex gap-4">
                 <Button size="lg" asChild>
@@ -318,10 +318,7 @@ Created to enhance your skin’s natural richness — never erase it.
                 ADVANCED GLOW BODY WASH
               </h2>
               <p className="text-lg text-muted-foreground max-w-md">
-                Vitamin C for radiant, glowing skin! Lemon extracts work to
-                brighten and even out your complexion while protecting against
-                environmental damage. Experience the power of citrus in every
-                drop.
+               The Advanced Glow Body Wash is a gentle, brightening cleanser that refreshes, smooths, and enhances radiance without drying the skin. With mild exfoliation, balanced pH, and hydrating ingredients, it supports an even tone while delivering a soft, spa-like cleansing experience. 
               </p>
               <Button size="lg" asChild>
                 <Link href="/shop">Shop Now</Link>

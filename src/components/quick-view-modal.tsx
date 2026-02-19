@@ -132,7 +132,6 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
                   </p>
                   
                   <div className="text-xs text-gray-600 space-y-1">
-                    <p>Vendor: MAHZ-SKIN Skincare Nigeria</p>
                     <p>Availability: {product.inStock ? "In stock" : "Out of stock"}</p>
                     <p>Product type:</p>
                   </div>

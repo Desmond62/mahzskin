@@ -154,7 +154,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">Copyright © 2025 Fair & White Nigeria. All Rights Reserved.</p>
+          <p className="text-sm text-muted-foreground">Copyright © 2026 Mahz-Skin Nigeria. All Rights Reserved.</p>
 
           {/* Social Media */}
           <div className="flex items-center gap-4">

@@ -63,9 +63,9 @@ export const SUBCATEGORIES = {
 export const SAMPLE_PRODUCTS: Product[] = [
   {
     id: "1",
-    name: "ADVANCED CLARIFYING FACE CREAM 50g | Gold",
+    name: "ADVANCED CLARIFYING FACE CREAM 50g",
     description: "Advanced Clarifying Face Cream. A powerfully gentle brightening cream designed to fade dark spots, sunburn, and uneven tone; without bleaching, dryness, or irritation. Formulated with dermatologist-backed actives, it restores clarity, smooths texture, and supports healthy, melanin-rich skin. Lighten. Smoothen. Restore.",
-    price: 13800,
+    price: 15000,
     currency: "NGN",
     image: "/skin-fair.png",
     category: "Face Care",
@@ -78,7 +78,7 @@ export const SAMPLE_PRODUCTS: Product[] = [
     id: "2",
     name: "ADVANCED GLOW BODY WASH 500ml",
     description: "COMING SOON!…",
-    price: 7000,
+    price: 18000,
     currency: "NGN",
     image: "/glow-body.jpeg",
     category: "Body Care",
