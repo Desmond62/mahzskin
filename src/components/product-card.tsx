@@ -121,9 +121,10 @@ export function ProductCard({ product }: ProductCardProps) {
               aria-label="Add to wishlist"
             >
               <Heart
-                className={`h-5 w-5 ${
+                className={`h-6 w-6 md:h-5 md:w-5 ${
                   inWishlist ? "fill-red-500 text-red-500" : "text-foreground"
                 }`}
+                strokeWidth={2.5}
               />
             </button>
 

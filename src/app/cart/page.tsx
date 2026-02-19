@@ -90,8 +90,8 @@ export default function CartPage() {
               {/* Cart items */}
               <div className="lg:col-span-2">
                 <div className="bg-card border border-border rounded-lg overflow-hidden">
-                  {/* Table header */}
-                  <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-accent/30 border-b border-border text-sm font-medium">
+                  {/* Table header - Desktop only */}
+                  <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-accent/30 border-b border-border text-sm font-medium">
                     <div className="col-span-5">PRODUCT</div>
                     <div className="col-span-2 text-center">PRICE</div>
                     <div className="col-span-3 text-center">QUANTITY</div>
@@ -104,52 +104,101 @@ export default function CartPage() {
                     const itemTotal = price * item.quantity
 
                     return (
-                      <div
-                        key={item.product.id}
-                        className="grid grid-cols-12 gap-4 px-6 py-6 border-b border-border items-center"
-                      >
-                        <div className="col-span-5 flex items-center gap-4">
-                          <Image
-                            src={item.product.image || "/placeholder.svg"}
-                            alt={item.product.name}
-                            width={80}
-                            height={80}
-                            className="w-20 h-20 object-cover rounded"
-                          />
-                          <div>
-                            <h3 className="font-medium text-sm mb-1">{item.product.name}</h3>
-                            <p className="text-xs text-muted-foreground">{item.product.category}</p>
+                      <div key={item.product.id}>
+                        {/* Desktop layout */}
+                        <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-6 border-b border-border items-center">
+                          <div className="col-span-5 flex items-center gap-4">
+                            <Image
+                              src={item.product.image || "/placeholder.svg"}
+                              alt={item.product.name}
+                              width={80}
+                              height={80}
+                              className="w-20 h-20 object-cover rounded"
+                            />
+                            <div>
+                              <h3 className="font-medium text-sm mb-1">{item.product.name}</h3>
+                              <p className="text-xs text-muted-foreground">{item.product.category}</p>
+                            </div>
+                          </div>
+
+                          <div className="col-span-2 text-center">
+                            <p className="font-medium">{formatPrice(price, currency)}</p>
+                          </div>
+
+                          <div className="col-span-3 flex items-center justify-center gap-2">
+                            <button
+                              onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
+                              className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
+                            >
+                              <Minus className="h-4 w-4" />
+                            </button>
+                            <span className="text-sm w-12 text-center font-medium">{item.quantity}</span>
+                            <button
+                              onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
+                              className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
+                            >
+                              <Plus className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleRemove(item.product.id)}
+                              className="ml-2 text-muted-foreground hover:text-destructive transition-colors"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+
+                          <div className="col-span-2 text-right">
+                            <p className="font-semibold">{formatPrice(itemTotal, currency)}</p>
                           </div>
                         </div>
 
-                        <div className="col-span-2 text-center">
-                          <p className="font-medium">{formatPrice(price, currency)}</p>
-                        </div>
-
-                        <div className="col-span-3 flex items-center justify-center gap-2">
-                          <button
-                            onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
-                            className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
-                          >
-                            <Minus className="h-4 w-4" />
-                          </button>
-                          <span className="text-sm w-12 text-center font-medium">{item.quantity}</span>
-                          <button
-                            onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
-                            className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
-                          >
-                            <Plus className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleRemove(item.product.id)}
-                            className="ml-2 text-muted-foreground hover:text-destructive transition-colors"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-
-                        <div className="col-span-2 text-right">
-                          <p className="font-semibold">{formatPrice(itemTotal, currency)}</p>
+                        {/* Mobile layout - Card style */}
+                        <div className="md:hidden p-4 border-b border-border">
+                          <div className="flex gap-4 mb-4">
+                            <Image
+                              src={item.product.image || "/placeholder.svg"}
+                              alt={item.product.name}
+                              width={80}
+                              height={80}
+                              className="w-20 h-20 object-cover rounded flex-shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-medium text-sm mb-1 line-clamp-2">{item.product.name}</h3>
+                              <p className="text-xs text-muted-foreground mb-2">{item.product.category}</p>
+                              <p className="font-semibold text-sm">{formatPrice(price, currency)}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
+                                className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
+                              >
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              <span className="text-sm w-8 text-center font-medium">{item.quantity}</span>
+                              <button
+                                onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
+                                className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </div>
+                            
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <p className="text-xs text-muted-foreground">Total</p>
+                                <p className="font-semibold">{formatPrice(itemTotal, currency)}</p>
+                              </div>
+                              <button
+                                onClick={() => handleRemove(item.product.id)}
+                                className="text-muted-foreground hover:text-destructive transition-colors"
+                              >
+                                <Trash2 className="h-5 w-5" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )

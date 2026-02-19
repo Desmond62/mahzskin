@@ -50,7 +50,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           {letters.map((letter, index) => (
             <span
               key={index}
-              className={`text-6xl md:text-8xl font-bold transition-all duration-500 ${
+              className={`text-4xl sm:text-6xl md:text-8xl font-bold transition-all duration-500 ${
                 index <= currentIndex
                   ? "text-yellow-400 opacity-100 scale-100"
                   : "text-gray-600 opacity-30 scale-75"

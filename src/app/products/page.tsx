@@ -35,6 +35,18 @@ function ProductsContent() {
   const [showOutOfStock, setShowOutOfStock] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Lock scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [sidebarOpen]);
+
   // Get unique categories
   const categories = Array.from(new Set(products.map((p) => p.category)));
 

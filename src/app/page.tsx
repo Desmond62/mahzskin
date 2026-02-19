@@ -74,7 +74,7 @@ export default function HomePage() {
               <div className="inline-block px-4 py-2 bg-primary/10 rounded-full text-sm font-medium">
                 Premium Skincare Collection
               </div>
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight">
                 MAHZ SKIN _ FOR OUR SKIN 
                 {/* <br />
                 <span className="text-primary">Ranges</span> */}
@@ -127,7 +127,7 @@ Created to enhance your skin’s natural richness — never erase it.
       <section className="py-16 px-4">
         <div className="container mx-auto">
           <FadeInUp className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3">
               FEATURED ON MAHZ-SKIN
             </h2>
             <p className="text-muted-foreground">
@@ -137,10 +137,7 @@ Created to enhance your skin’s natural richness — never erase it.
 
           <div className="grid md:grid-cols-3 gap-8">
             <FadeInUp delay={100}>
-              <Link
-                href="/category/range"
-                className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-pink-100 to-pink-50"
-              >
+              <div className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-pink-100 to-pink-50 cursor-pointer">
                 <Image
                   src="/cream-cup.png"
                   alt="Range"
@@ -155,18 +152,15 @@ Created to enhance your skin’s natural richness — never erase it.
                     Elevate your skincare routine with our luxurious collection
                     of premium products designed for radiant, healthy skin.
                   </p>
-                  <Button variant="secondary" size="sm" className="mt-4">
-                    Shop Now
+                  <Button variant="secondary" size="sm" className="mt-4" asChild>
+                    <Link href="/shop">Shop Now</Link>
                   </Button>
                 </div>
-              </Link>
+              </div>
             </FadeInUp>
 
             <FadeInUp delay={200}>
-              <Link
-                href="/category/care"
-                className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-blue-100 to-blue-50"
-              >
+              <div className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-blue-100 to-blue-50 cursor-pointer">
                 <Image
                   src="/skincare2.png"
                   alt="Care"
@@ -181,18 +175,15 @@ Created to enhance your skin’s natural richness — never erase it.
                     Your skin deserves attention! Our care products are
                     formulated to nourish, hydrate, and protect your skin.
                   </p>
-                  <Button variant="secondary" size="sm" className="mt-4">
-                    Shop Now
+                  <Button variant="secondary" size="sm" className="mt-4" asChild>
+                    <Link href="/shop">Shop Now</Link>
                   </Button>
                 </div>
-              </Link>
+              </div>
             </FadeInUp>
 
             <FadeInUp delay={300}>
-              <Link
-                href="/category/needs"
-                className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-amber-100 to-amber-50"
-              >
+              <div className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-amber-100 to-amber-50 cursor-pointer">
                 <Image
                   src="/face-serrum.avif"
                   alt="Needs"
@@ -207,11 +198,11 @@ Created to enhance your skin’s natural richness — never erase it.
                     How should you be caring for your skin? We&apos;ve got the
                     answers. From serums to creams, find what you need.
                   </p>
-                  <Button variant="secondary" size="sm" className="mt-4">
-                    Shop Now
+                  <Button variant="secondary" size="sm" className="mt-4" asChild>
+                    <Link href="/shop">Shop Now</Link>
                   </Button>
                 </div>
-              </Link>
+              </div>
             </FadeInUp>
           </div>
         </div>
@@ -221,7 +212,7 @@ Created to enhance your skin’s natural richness — never erase it.
       <section className="py-16 px-4 bg-accent/30">
         <div className="container mx-auto">
           <FadeInUp className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold">NEW ARRIVALS</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold">NEW ARRIVALS</h2>
             <Button variant="outline" asChild>
               <Link href="/shop">
                 View All
@@ -251,7 +242,7 @@ Created to enhance your skin’s natural richness — never erase it.
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <FadeInLeft className="space-y-6 text-white">
-              <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
                 SKINCARE FOR
                 <br />
                 QUEENS
@@ -284,7 +275,7 @@ Created to enhance your skin’s natural richness — never erase it.
       <section className="py-16 px-4">
         <div className="container mx-auto">
           <FadeInUp className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-3">MAHZ-SKIN Picks</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3">MAHZ-SKIN Picks</h2>
             <p className="text-muted-foreground">
               Discover the skincare favourites for glowing skin that get
               noticed. From body-boosting cream to the ultimate brightening
@@ -332,7 +323,9 @@ Created to enhance your skin’s natural richness — never erase it.
                 environmental damage. Experience the power of citrus in every
                 drop.
               </p>
-              <Button size="lg">Shop Now</Button>
+              <Button size="lg" asChild>
+                <Link href="/shop">Shop Now</Link>
+              </Button>
             </FadeInLeft>
             <FadeInRight className="relative h-full">
               <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
@@ -353,7 +346,7 @@ Created to enhance your skin’s natural richness — never erase it.
       <section className="py-16 px-4 bg-accent/30">
         <div className="container mx-auto">
           <FadeInUp className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-3">BEST SELLERS</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3">BEST SELLERS</h2>
             <p className="text-muted-foreground">
               Our most loved products by customers worldwide
             </p>
