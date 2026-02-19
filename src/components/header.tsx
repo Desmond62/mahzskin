@@ -385,21 +385,7 @@ export function Header() {
             </>
           )}
 
-          {/* Search bar - expandable */}
-          {searchOpen && (
-            <div className="pb-3 sm:pb-4 animate-in slide-in-from-top-2">
-              <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-                <input
-                  type="search"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-3 sm:px-4 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
-                  autoFocus
-                />
-              </form>
-            </div>
-          )}
+          {/* Search bar - expandable with overlay */}
 
           {/* Navigation - Desktop - only show when not scrolled */}
           {!isScrolled && (
@@ -511,6 +497,30 @@ export function Header() {
             : "h-[180px] md:h-[200px]"  // Full header with banner
         }`}
       />
+
+      {/* Search overlay - outside header for full screen coverage */}
+      {searchOpen && (
+        <>
+          {/* Overlay */}
+          <div 
+            className="fixed inset-0 bg-black/60 z-[60]"
+            onClick={() => setSearchOpen(false)}
+          />
+          
+          {/* Search bar */}
+          <div className="fixed top-24 left-0 right-0 z-[70] px-4">
+            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+              <input
+                type="search"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 text-base border-2 border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-ring bg-white shadow-2xl"
+              />
+            </form>
+          </div>
+        </>
+      )}
     </>
   );
 }

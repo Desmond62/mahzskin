@@ -53,10 +53,6 @@ const WhatsAppWidget: React.FC = () => {
     setMessage(e.target.value);
   };
 
-    const handleWhatsAppClick = () => {
-    inputRef.current?.focus(); // focus the input when icon is clicked
-  };
-
   const handleEmojiClick = (emojiObject: EmojiClickData) => {
     setMessage((prev) => prev + emojiObject.emoji);
   };
@@ -70,7 +66,7 @@ const WhatsAppWidget: React.FC = () => {
           className={`w-14 h-14 rounded-full flex items-center justify-center cursor-pointer  text-white ${isOpen? " bg-[#a886cd] " : " bg-[#3D4492]"} text-2xl shadow-lg hover:scale-105 transition`}
           aria-label="Toggle WhatsApp Chat"
         >
-          {isOpen ? <IoMdClose className="cursor-pointer"/> : <FaWhatsapp className="cursor-pointer"  onClick={handleWhatsAppClick}/>}
+          {isOpen ? <IoMdClose className="cursor-pointer"/> : <FaWhatsapp className="cursor-pointer"/>}
         </button>
       </div>
 
