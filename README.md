@@ -1,3 +1,31 @@
+# MAHZSKIN 🧴
+
+MAHZSKIN is a modern skincare e-commerce website where customers can browse products, place orders, and make online payments.  
+Paystack integration is planned for secure online transactions.
+
+## Features
+- Browse skincare products
+- Product details pages
+- Shopping cart system
+- Order placement
+- Currency conversion (auto exchange rates)
+- Responsive UI for mobile and desktop
+- Paystack payment integration (in progress)
+
+## Tech Stack
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- ExchangeRate API
+- Paystack (planned)
+
+## Live Demo
+Coming soon
+
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
