@@ -258,9 +258,13 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
 function ImageZoom({ src, alt }: { src: string; alt: string }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const [position, setPosition] = useState({ x: 50, y: 50 });
+  // Use lazy initializer to detect touch device on mount without useEffect
+  const [isTouchDevice] = useState(() => 
+    typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isZoomed) return;
+    if (!isZoomed || isTouchDevice) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -269,12 +273,34 @@ function ImageZoom({ src, alt }: { src: string; alt: string }) {
     setPosition({ x, y });
   };
 
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isZoomed) return;
+    
+    const touch = e.touches[0];
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((touch.clientX - rect.left) / rect.width) * 100;
+    const y = ((touch.clientY - rect.top) / rect.height) * 100;
+    
+    setPosition({ x, y });
+  };
+
+  const handleTouchStart = () => {
+    setIsZoomed(true);
+  };
+
+  const handleTouchEnd = () => {
+    setIsZoomed(false);
+  };
+
   return (
     <div
-      className="relative aspect-square bg-gray-100 flex items-center justify-center p-8  overflow-hidden cursor-zoom-in"
-      onMouseEnter={() => setIsZoomed(true)}
-      onMouseLeave={() => setIsZoomed(false)}
+      className="relative aspect-square bg-gray-100 flex items-center justify-center p-8 overflow-hidden cursor-zoom-in touch-none"
+      onMouseEnter={() => !isTouchDevice && setIsZoomed(true)}
+      onMouseLeave={() => !isTouchDevice && setIsZoomed(false)}
       onMouseMove={handleMouseMove}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -296,7 +322,7 @@ function ImageZoom({ src, alt }: { src: string; alt: string }) {
       />
       {isZoomed && (
         <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded z-10">
-          Move cursor to explore
+          {isTouchDevice ? 'Drag to explore' : 'Move cursor to explore'}
         </div>
       )}
     </div>

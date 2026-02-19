@@ -122,9 +122,9 @@ export function Header() {
                 <Image 
                   src="/logo-removebg-preview.png" 
                   alt="Mahz Logo" 
-                  width={60}
-                  height={60}
-                  className="object-cover h-10 sm:h-12 w-auto" 
+                  width={80}
+                  height={80}
+                  className="object-cover h-14 sm:h-16 w-auto" 
                 />
               </Link>
 
@@ -179,7 +179,7 @@ export function Header() {
                   className="hover:text-primary transition-colors p-1"
                   aria-label="Search"
                 >
-                  <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Search className="h-5 w-5 sm:h-5 sm:w-5" />
                 </button>
 
                 <Link
@@ -187,7 +187,7 @@ export function Header() {
                   className="relative hover:text-primary transition-colors p-1"
                   aria-label="Wishlist"
                 >
-                  <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Heart className="h-5 w-5 sm:h-5 sm:w-5" />
                   {wishlistCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                       {wishlistCount}
@@ -202,7 +202,7 @@ export function Header() {
                   className="relative hover:text-primary transition-colors p-1"
                   aria-label="Shopping cart"
                 >
-                  <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <ShoppingCart className="h-5 w-5 sm:h-5 sm:w-5" />
                   {cartCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                       {cartCount}
@@ -217,9 +217,9 @@ export function Header() {
                   aria-label="Menu"
                 >
                   {mobileMenuOpen ? (
-                    <X className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <X className="h-5 w-5 sm:h-5 sm:w-5" />
                   ) : (
-                    <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <Menu className="h-5 w-5 sm:h-5 sm:w-5" />
                   )}
                 </button>
               </div>
@@ -241,9 +241,9 @@ export function Header() {
                   <div className="text-center">
                     <Image src="/logo-removebg-preview.png" 
                     alt="F&W Logo" 
-                    width={100}
-                    height={100}
-                    className="object-cover h-20 w-25" />
+                    width={120}
+                    height={120}
+                    className="object-cover h-24 w-auto" />
                   </div>
                 </Link>
 
@@ -254,7 +254,7 @@ export function Header() {
                     className="hover:text-primary transition-colors p-1"
                     aria-label="Search"
                   >
-                    <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <Search className="h-5 w-5 sm:h-5 sm:w-5" />
                   </button>
 
                   <Link
@@ -262,7 +262,7 @@ export function Header() {
                     className="relative hover:text-primary transition-colors p-1"
                     aria-label="Wishlist"
                   >
-                    <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <Heart className="h-5 w-5 sm:h-5 sm:w-5" />
                     {wishlistCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium text-[10px]">
                         {wishlistCount}
@@ -277,7 +277,7 @@ export function Header() {
                     className="relative hover:text-primary transition-colors p-1"
                     aria-label="Shopping cart"
                   >
-                    <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <ShoppingCart className="h-5 w-5 sm:h-5 sm:w-5" />
                     {cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium text-[10px]">
                         {cartCount}
@@ -291,9 +291,9 @@ export function Header() {
                     aria-label="Menu"
                   >
                     {mobileMenuOpen ? (
-                      <X className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <X className="h-5 w-5 sm:h-5 sm:w-5" />
                     ) : (
-                      <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <Menu className="h-5 w-5 sm:h-5 sm:w-5" />
                     )}
                   </button>
                 </div>
@@ -311,9 +311,9 @@ export function Header() {
                   <div className="text-center">
                     <Image src="/logo-removebg-preview.png" 
                     alt="F&W Logo" 
-                    width={100}
-                    height={100}
-                    className="object-cover h-20 w-30" />
+                    width={120}
+                    height={120}
+                    className="object-cover h-24 w-auto" />
                   </div>
                 </Link>
 

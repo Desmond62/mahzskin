@@ -114,10 +114,10 @@ export function ProductCard({ product }: ProductCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             
-            {/* Wishlist button - only visible on hover */}
+            {/* Wishlist button - always visible on mobile, hover on desktop */}
             <button
               onClick={handleToggleWishlist}
-              className="absolute top-3 right-3 p-2 bg-card/90 rounded-full hover:bg-card transition-all opacity-0 group-hover:opacity-100 z-10"
+              className="absolute top-3 right-3 p-2 bg-card/90 rounded-full hover:bg-card transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
               aria-label="Add to wishlist"
             >
               <Heart
@@ -127,16 +127,27 @@ export function ProductCard({ product }: ProductCardProps) {
               />
             </button>
 
-            {/* Quick View button - only visible on hover */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 z-0">
+            {/* Quick View button - always visible on mobile, hover on desktop */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity bg-black/20 md:bg-black/20 bg-transparent z-0">
               <Button
                 onClick={handleQuickView}
                 variant="secondary"
                 size="sm"
-                className="shadow-lg"
+                className="shadow-lg md:block hidden md:group-hover:block"
               >
                 Quick View
               </Button>
+              {/* Mobile Quick View Icon */}
+              <button
+                onClick={handleQuickView}
+                className="md:hidden absolute bottom-3 right-3 p-2 bg-card/90 rounded-full hover:bg-card transition-all"
+                aria-label="Quick view"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
             </div>
           </div>
           <div className="p-4">

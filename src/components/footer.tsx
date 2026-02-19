@@ -36,16 +36,16 @@ export function Footer() {
               Get insider deals, skincare tips, and first dibs on new drops delivered straight to your inbox. 100% Fun.
               Zero spam.
             </p>
-            <form onSubmit={handleSubscribe} className="flex gap-2">
+            <form onSubmit={handleSubscribe} className="flex flex-wrap gap-2">
               <input
                 type="email"
                 placeholder="enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="flex-1 px-4 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="flex-1 min-w-[180px] px-4 py-2 border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
-              <Button type="submit" className="bg-black text-white hover:bg-black/90">
+              <Button type="submit" className="bg-black text-white hover:bg-black/90 px-6 shrink-0 min-w-[100px]">
                 SUBMIT
               </Button>
             </form>

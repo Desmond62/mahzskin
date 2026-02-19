@@ -463,20 +463,20 @@ Created to enhance your skin’s natural richness — never erase it.
             Get insider deals, skincare tips, and first dibs on new arrivals.
             Plus, enjoy 10% off your first order!
           </p>
-          <form onSubmit={handleEmailSubmit} className="flex gap-3 max-w-md mx-auto">
+          <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full px-4">
             <input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 bg-gray-400 px-4 py-3 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="flex-1 bg-gray-400 px-4 py-3 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring min-w-0"
               disabled={isSubmitting}
             />
             <Button 
               type="submit" 
               size="lg" 
               variant="secondary"
-              className="cursor-pointer"
+              className="cursor-pointer whitespace-nowrap sm:text-base text-sm sm:px-6 px-4 sm:py-3 py-2"
               disabled={isSubmitting || !email.trim()}
             >
               {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
