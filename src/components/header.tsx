@@ -481,7 +481,7 @@ export function Header() {
                   </li>
                 ))}
                 <li>
-                  <UserMenu />
+                  <UserMenu isMobile={true} onNavigate={() => setMobileMenuOpen(false)} />
                 </li>
               </ul>
             </nav>

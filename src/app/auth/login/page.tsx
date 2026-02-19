@@ -131,10 +131,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8E7DD]">
-      <div className="container mx-auto px-4 py-12">
-      <div className="max-w-md mx-auto">
-        <div className="bg-card border border-border rounded-lg p-8">
+    <div className="min-h-screen bg-[#F8E7DD] flex items-center justify-center px-4 py-12">
+      <div className="max-w-md w-full">
+        <div className="bg-card border border-border rounded-lg p-8 shadow-lg">
           {showSuccess ? (
             // Success Message
             <div className="text-center">
@@ -231,7 +230,6 @@ export default function LoginPage() {
           )}
         </div>
       </div>
-    </div>
     </div>
   );
 }

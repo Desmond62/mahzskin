@@ -39,11 +39,9 @@ import type { Metadata } from "next"
 import { Playfair_Display, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
-import { Header } from "@/components/header"
-import { CartDrawer } from "@/components/cart-drawer"
-import { Footer } from "@/components/footer"
 import { ToastContainer } from "@/components/toast"
 import { AppWrapper } from "@/components/app-wrapper"
+import { ConditionalLayout } from "@/components/conditional-layout"
 import { Suspense } from "react"
 
 const playfair = Playfair_Display({
@@ -80,10 +78,9 @@ export default function RootLayout({
       <body className={`font-sans ${inter.variable} ${playfair.variable} antialiased bg-[#F8E7DD]`}>
         <AppWrapper>
           <Suspense fallback={<div>Loading...</div>}>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-            <CartDrawer />
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
             <ToastContainer />
           </Suspense>
         </AppWrapper>
