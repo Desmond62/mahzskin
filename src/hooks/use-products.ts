@@ -9,7 +9,9 @@ export function useProducts() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadProducts = () => {
+    const loadProducts = async () => {
+      // Simulate loading delay to show skeleton
+      await new Promise(resolve => setTimeout(resolve, 800))
       initializeProducts()
       setProducts(getProducts())
       setLoading(false)
