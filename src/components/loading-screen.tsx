@@ -40,7 +40,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
   }, [letters.length, onComplete, showComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
       <div
         className={`text-center transition-opacity duration-500 ${
           showComplete ? "opacity-0" : "opacity-100"

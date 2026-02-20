@@ -33,6 +33,7 @@ export default function CheckoutPage() {
   const [sameAddress, setSameAddress] = useState(true);
   const [emailOffers, setEmailOffers] = useState(false);
   const [discountCode, setDiscountCode] = useState("");
+  const [showOrderSummary, setShowOrderSummary] = useState(false);
 
   useEffect(() => {
     const initializeCheckout = () => {
@@ -63,9 +64,95 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
         <div className="max-w-7xl mx-auto">
+          {/* Mobile Order Summary Toggle - Only visible on mobile */}
+          <div className="lg:hidden mb-4 bg-accent/30 p-4 rounded-lg">
+            <button
+              onClick={() => setShowOrderSummary(!showOrderSummary)}
+              className="w-full flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2 text-primary">
+                <svg
+                  className={`h-4 w-4 transition-transform ${showOrderSummary ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                <span className="text-sm font-medium">
+                  {showOrderSummary ? 'Hide' : 'Show'} order summary
+                </span>
+              </div>
+              <span className="text-lg font-bold">{formatPrice(total, currency)}</span>
+            </button>
+
+            {/* Collapsible Order Summary */}
+            {showOrderSummary && (
+              <div className="mt-4 space-y-4 animate-in slide-in-from-top-2">
+                {/* Cart items */}
+                {cart.map((item) => {
+                  const price = convertPrice(item.product.price, "NGN", currency);
+                  return (
+                    <div key={item.product.id} className="flex gap-3">
+                      <div className="relative shrink-0">
+                        <Image
+                          src={item.product.image || "/placeholder.svg"}
+                          alt={item.product.name}
+                          className="w-16 h-16 object-cover rounded border border-border"
+                          width={64}
+                          height={64}
+                        />
+                        <span className="absolute -top-2 -right-2 bg-foreground text-background text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                          {item.quantity}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-medium line-clamp-2">{item.product.name}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">{item.product.category}</p>
+                      </div>
+                      <p className="text-sm font-semibold shrink-0">
+                        {formatPrice(price * item.quantity, currency)}
+                      </p>
+                    </div>
+                  );
+                })}
+
+                {/* Discount code */}
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Discount code"
+                    value={discountCode}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDiscountCode(e.target.value)}
+                    className="text-sm"
+                  />
+                  <Button variant="outline" className="text-sm bg-transparent">Apply</Button>
+                </div>
+
+                {/* Totals */}
+                <div className="space-y-2 pt-4 border-t border-border">
+                  <div className="flex justify-between text-sm">
+                    <span>Subtotal · {cart.length} items</span>
+                    <span className="font-medium">{formatPrice(subtotal, currency)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Shipping</span>
+                    <span className="font-medium">{formatPrice(shippingConverted, currency)}</span>
+                  </div>
+                  <div className="flex justify-between text-base font-semibold pt-2 border-t border-border">
+                    <span>Total</span>
+                    <div className="text-right">
+                      <span className="text-xs text-muted-foreground font-normal mr-2">{currency}</span>
+                      <span>{formatPrice(total, currency)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
             {/* Left side - Form */}
-            <div className="space-y-6 sm:space-y-8 max-h-[calc(100vh-4rem)] overflow-y-auto lg:pr-4">
+            <div className="space-y-6 sm:space-y-8 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto lg:pr-4">
               {/* Logo */}
               <Link href="/" className="inline-block">
                 <div className="text-xl sm:text-2xl font-bold tracking-tight">
@@ -513,8 +600,8 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Right side - Order summary */}
-            <div className="bg-accent/30 p-4 sm:p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto rounded-lg lg:rounded-none">
+            {/* Right side - Order summary - Hidden on mobile, visible on desktop */}
+            <div className="hidden lg:block bg-accent/30 p-4 sm:p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto rounded-lg lg:rounded-none">
               <div className="space-y-4 sm:space-y-6">
                 {/* Cart items */}
                 {cart.map((item) => {

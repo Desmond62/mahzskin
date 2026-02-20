@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { useProducts } from "@/hooks/use-products";
+import { ProductGridSkeleton } from "@/components/ui/skeleton";
 
 import { Grid, LayoutGrid, LayoutList, X } from "lucide-react";
 import { Button } from "@/components/ui";
@@ -499,7 +500,11 @@ export default function ProductsPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#F8E7DD]">
-          <div className="container mx-auto px-4 py-8">Loading products...</div>
+          <div className="container mx-auto px-4 py-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <ProductGridSkeleton count={12} />
+            </div>
+          </div>
         </div>
       }
     >

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useProducts } from "@/hooks/use-products";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
+import { ProductGridSkeleton } from "@/components/ui/skeleton";
 import {
   FadeInUp,
   FadeInLeft,
@@ -226,14 +227,18 @@ created to enhance your skin’s natural richness.
             delay={100}
             className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {newArrivals.map((product, index) => (
-              <div
-                key={product.id}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            {loading ? (
+              <ProductGridSkeleton count={4} />
+            ) : (
+              newArrivals.map((product, index) => (
+                <div
+                  key={product.id}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
           </FadeInUp>
         </div>
       </section>
@@ -290,14 +295,18 @@ created to enhance your skin’s natural richness.
             delay={100}
             className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
           >
-            {featuredProducts.map((product, index) => (
-              <div
-                key={product.id}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            {loading ? (
+              <ProductGridSkeleton count={4} />
+            ) : (
+              featuredProducts.map((product, index) => (
+                <div
+                  key={product.id}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
           </FadeInUp>
 
           <FadeInUp delay={200} className="text-center">
@@ -356,14 +365,18 @@ created to enhance your skin’s natural richness.
             delay={100}
             className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {bestSellers.map((product, index) => (
-              <div
-                key={product.id}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            {loading ? (
+              <ProductGridSkeleton count={4} />
+            ) : (
+              bestSellers.map((product, index) => (
+                <div
+                  key={product.id}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
           </FadeInUp>
         </div>
       </section>

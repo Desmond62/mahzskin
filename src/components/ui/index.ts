@@ -4,3 +4,4 @@ export { Label } from './label';
 export { RadioGroup, RadioGroupItem } from './radio-group';
 export { Checkbox } from './checkbox';
 export { Loader } from './loader';
+export { Skeleton, ProductCardSkeleton, ProductGridSkeleton, PageSkeleton } from './skeleton';
