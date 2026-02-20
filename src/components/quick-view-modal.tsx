@@ -22,6 +22,18 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuying, setIsBuying] = useState(false);
 
+  // Lock scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   // Listen for currency changes
   useEffect(() => {
     const handleCurrencyChange = () => {

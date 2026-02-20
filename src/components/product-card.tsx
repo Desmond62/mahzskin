@@ -128,52 +128,41 @@ export function ProductCard({ product }: ProductCardProps) {
               />
             </button>
 
-            {/* Quick View button - always visible on mobile, hover on desktop */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity bg-black/20 md:bg-black/20 bg-transparent z-0">
-              <Button
-                onClick={handleQuickView}
-                variant="secondary"
-                size="sm"
-                className="shadow-lg md:block hidden md:group-hover:block"
-              >
-                Quick View
-              </Button>
-              {/* Mobile Quick View Icon */}
-              <button
-                onClick={handleQuickView}
-                className="md:hidden absolute bottom-3 right-3 p-2 bg-card/90 rounded-full hover:bg-card transition-all"
-                aria-label="Quick view"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </button>
-            </div>
+            {/* Quick View icon - always visible on mobile, hover on desktop */}
+            <button
+              onClick={handleQuickView}
+              className="absolute bottom-3 left-3 p-2 bg-card/90 rounded-full hover:bg-card transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10"
+              aria-label="Quick view"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
           </div>
-          <div className="p-4">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+          <div className="p-4 space-y-3">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">
               {product.category}
             </p>
-            <h3 className="font-medium text-sm mb-2 line-clamp-2">
+            <h3 className="font-medium text-sm line-clamp-2 min-h-[40px]">
               {product.name}
             </h3>
-            <div className="flex items-center justify-between">
-              <p className="font-semibold">{formatPrice(price, currency)}</p>
-              <Button 
-                size="sm" 
-                onClick={handleAddToCart} 
-                className="gap-2"
-                disabled={isAddingToCart}
-              >
-                {isAddingToCart ? (
-                  <Loader className="h-4 w-4" />
-                ) : (
-                  <ShoppingCart className="h-4 w-4" />
-                )}
-                {isAddingToCart ? "Adding..." : "Add to Cart"}
-              </Button>
-            </div>
+            <p className="font-semibold text-lg">{formatPrice(price, currency)}</p>
+            <Button 
+              onClick={handleAddToCart} 
+              className="w-full"
+              disabled={isAddingToCart}
+              variant="outline"
+            >
+              {isAddingToCart ? (
+                <>
+                  <Loader className="h-4 w-4 mr-2" />
+                  Adding...
+                </>
+              ) : (
+                "Buy Now"
+              )}
+            </Button>
           </div>
         </div>
       </div>

@@ -2,45 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { X, Minus, Plus, Trash2 } from "lucide-react";
-import type { CartItem } from "@/lib/types";
-import { getCart, updateCartQuantity, removeFromCart } from "@/lib/storage";
 import { formatPrice, convertPrice, getCurrency } from "@/lib/currency-rates";
 import Link from "next/link";
 import { Button, Loader } from "./ui";
 import Image from "next/image";
+import { useCartStore } from "@/stores/cart-store";
 
 export function CartDrawer() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { 
+    isOpen, 
+    isVisible, 
+    cart, 
+    isCheckingOut, 
+    isViewingCart,
+    openDrawer,
+    closeDrawer,
+    toggleDrawer,
+    updateQuantity,
+    removeItem,
+    setIsCheckingOut,
+    setIsViewingCart
+  } = useCartStore();
+
   const [currency, setCurrency] = useState("NGN");
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [isViewingCart, setIsViewingCart] = useState(false);
 
   useEffect(() => {
-    const handleToggle = () => {
-      if (isOpen) {
-        // Start closing animation
-        setIsVisible(false);
-        setTimeout(() => {
-          setIsOpen(false);
-        }, 300); // Match animation duration
-      } else {
-        // Start opening animation
-        setIsOpen(true);
-        setTimeout(() => {
-          setIsVisible(true);
-        }, 10); // Small delay to ensure DOM is ready
-      }
-    };
-
+    const handleToggle = () => toggleDrawer();
     const handleOpen = () => {
-      if (!isOpen) {
-        setIsOpen(true);
-        setTimeout(() => {
-          setIsVisible(true);
-        }, 10);
-      }
+      if (!isOpen) openDrawer();
     };
 
     window.addEventListener("toggleCart", handleToggle);
@@ -50,23 +39,7 @@ export function CartDrawer() {
       window.removeEventListener("toggleCart", handleToggle);
       window.removeEventListener("openCartDrawer", handleOpen);
     };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      const updateCartData = () => {
-        setCart(getCart());
-        setCurrency(getCurrency());
-      };
-      updateCartData();
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
+  }, [isOpen, openDrawer, toggleDrawer]);
 
   useEffect(() => {
     const handleCurrencyChange = () => setCurrency(getCurrency());
@@ -74,19 +47,6 @@ export function CartDrawer() {
     return () =>
       window.removeEventListener("currencyChange", handleCurrencyChange);
   }, []);
-
-  const handleUpdateQuantity = (productId: string, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    updateCartQuantity(productId, newQuantity);
-    setCart(getCart());
-    window.dispatchEvent(new Event("cartUpdated"));
-  };
-
-  const handleRemove = (productId: string) => {
-    removeFromCart(productId);
-    setCart(getCart());
-    window.dispatchEvent(new Event("cartUpdated"));
-  };
 
   const subtotal = cart.reduce((sum, item) => {
     const price = convertPrice(item.product.price, "NGN", currency);
@@ -100,7 +60,7 @@ export function CartDrawer() {
   const handleCheckout = () => {
     setIsCheckingOut(true);
     setTimeout(() => {
-      handleClose();
+      closeDrawer();
       setIsCheckingOut(false);
     }, 500);
   };
@@ -108,16 +68,9 @@ export function CartDrawer() {
   const handleViewCart = () => {
     setIsViewingCart(true);
     setTimeout(() => {
-      handleClose();
+      closeDrawer();
       setIsViewingCart(false);
     }, 500);
-  };
-
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      setIsOpen(false);
-    }, 300);
   };
 
   if (!isOpen) return null;
@@ -129,7 +82,7 @@ export function CartDrawer() {
         className={`fixed inset-0 bg-black/50 z-70 transition-opacity duration-300 ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}
-        onClick={handleClose}
+        onClick={closeDrawer}
       />
 
       {/* Drawer */}
@@ -143,7 +96,7 @@ export function CartDrawer() {
           <div className="flex items-center justify-between p-6 border-b border-border">
             <h2 className="text-lg font-semibold">Shopping Cart</h2>
             <button
-              onClick={handleClose}
+              onClick={closeDrawer}
               className="hover:text-primary transition-colors"
             >
               <X className="h-5 w-5" />
@@ -183,7 +136,7 @@ export function CartDrawer() {
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() =>
-                              handleUpdateQuantity(
+                              updateQuantity(
                                 item.product.id,
                                 item.quantity - 1
                               )
@@ -197,7 +150,7 @@ export function CartDrawer() {
                           </span>
                           <button
                             onClick={() =>
-                              handleUpdateQuantity(
+                              updateQuantity(
                                 item.product.id,
                                 item.quantity + 1
                               )
@@ -209,7 +162,7 @@ export function CartDrawer() {
                         </div>
                       </div>
                       <button
-                        onClick={() => handleRemove(item.product.id)}
+                        onClick={() => removeItem(item.product.id)}
                         className="text-muted-foreground hover:text-destructive transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />

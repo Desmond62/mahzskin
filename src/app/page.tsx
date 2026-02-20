@@ -70,7 +70,32 @@ export default function HomePage() {
       <section className="relative bg-linear-to-br from-pink-50 via-white to-amber-50 py-20 px-4">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <FadeInLeft className="space-y-6">
+            {/* Image first on mobile, text first on desktop */}
+            <FadeInRight className="relative lg:order-2">
+              <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
+                <Image
+                  src="/girlie-cream.jpeg"
+                  alt="Fair & White Products"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  width={600}
+                  height={600}
+                />
+              </div>
+              <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-xl p-6 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Premium Quality</p>
+                    <p className="text-sm text-muted-foreground">
+                      Trusted by thousands
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </FadeInRight>
+            <FadeInLeft className="space-y-6 lg:order-1">
               <div className="inline-block px-4 py-2 bg-primary/10 rounded-full text-sm font-medium">
                 Premium Skincare Collection
               </div>
@@ -95,30 +120,6 @@ created to enhance your skin’s natural richness.
                 </Button>
               </div>
             </FadeInLeft>
-            <FadeInRight className="relative">
-              <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
-                <Image
-                  src="/girlie-cream.jpeg"
-                  alt="Fair & White Products"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  width={600}
-                  height={600}
-                />
-              </div>
-              <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-xl p-6 shadow-lg">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Sparkles className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Premium Quality</p>
-                    <p className="text-sm text-muted-foreground">
-                      Trusted by thousands
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </FadeInRight>
           </div>
         </div>
       </section>
@@ -223,7 +224,7 @@ created to enhance your skin’s natural richness.
 
           <FadeInUp
             delay={100}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {newArrivals.map((product, index) => (
               <div
@@ -241,7 +242,19 @@ created to enhance your skin’s natural richness.
       <section className="relative py-20 px-4 bg-[#E6C6B4] overflow-hidden">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <FadeInLeft className="space-y-6 text-white">
+            {/* Image first on mobile, text first on desktop */}
+            <FadeInRight className="relative h-full lg:order-2">
+              <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
+                <Image
+                  src="/cream-girl.jpeg"
+                  alt="Skincare for Queens"
+                  width={600}
+                  height={600}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              </div>
+            </FadeInRight>
+            <FadeInLeft className="space-y-6 text-white lg:order-1">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
                 SKINCARE FOR
                 <br />
@@ -256,17 +269,6 @@ created to enhance your skin’s natural richness.
                 Learn More
               </Button>
             </FadeInLeft>
-            <FadeInRight className="relative h-full">
-              <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
-                <Image
-                  src="/cream-girl.jpeg"
-                  alt="Skincare for Queens"
-                  width={600}
-                  height={600}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-            </FadeInRight>
           </div>
         </div>
       </section>
@@ -286,7 +288,7 @@ created to enhance your skin’s natural richness.
 
           <FadeInUp
             delay={100}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
           >
             {featuredProducts.map((product, index) => (
               <div
@@ -313,18 +315,8 @@ created to enhance your skin’s natural richness.
       <section className="relative py-20 px-4 bg-[#E6C6B4] overflow-hidden">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <FadeInLeft className="space-y-6">
-              <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
-                ADVANCED GLOW BODY WASH
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-md">
-               The Advanced Glow Body Wash is a gentle, brightening cleanser that refreshes, smooths, and enhances radiance without drying the skin. With mild exfoliation, balanced pH, and hydrating ingredients, it supports an even tone while delivering a soft, spa-like cleansing experience. 
-              </p>
-              <Button size="lg" asChild>
-                <Link href="/shop">Shop Now</Link>
-              </Button>
-            </FadeInLeft>
-            <FadeInRight className="relative h-full">
+            {/* Image first on mobile, text first on desktop */}
+            <FadeInRight className="relative h-full lg:order-2">
               <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
                 <Image
                   src="/sparkling-bottle-cream.jpeg"
@@ -335,6 +327,17 @@ created to enhance your skin’s natural richness.
                 />
               </div>
             </FadeInRight>
+            <FadeInLeft className="space-y-6 lg:order-1">
+              <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
+                ADVANCED GLOW BODY WASH
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-md">
+               The Advanced Glow Body Wash is a gentle, brightening cleanser that refreshes, smooths, and enhances radiance without drying the skin. With mild exfoliation, balanced pH, and hydrating ingredients, it supports an even tone while delivering a soft, spa-like cleansing experience. 
+              </p>
+              <Button size="lg" asChild>
+                <Link href="/shop">Shop Now</Link>
+              </Button>
+            </FadeInLeft>
           </div>
         </div>
       </section>
@@ -351,7 +354,7 @@ created to enhance your skin’s natural richness.
 
           <FadeInUp
             delay={100}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {bestSellers.map((product, index) => (
               <div

@@ -40,7 +40,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
   }, [letters.length, onComplete, showComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div
         className={`text-center transition-opacity duration-500 ${
           showComplete ? "opacity-0" : "opacity-100"
@@ -52,11 +52,13 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               key={index}
               className={`text-4xl sm:text-6xl md:text-8xl font-bold transition-all duration-500 ${
                 index <= currentIndex
-                  ? "text-[#E6C6B4 ] opacity-100 scale-100"
-                  : "text-gray-600 opacity-30 scale-75"
+                  ? "opacity-100 scale-100"
+                  : "opacity-30 scale-75"
               }`}
               style={{
                 fontFamily: "serif",
+                color: "#E6C6B4",
+                textShadow: index <= currentIndex ? "0 0 20px rgba(230, 198, 180, 0.5)" : undefined,
                 transitionDelay: `${index * 100}ms`,
               }}
             >
@@ -66,11 +68,12 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
         </div>
 
         <div
-          className={`text-[#E6C6B4 ] text-lg md:text-xl font-light tracking-widest transition-all duration-500 ${
+          className={`text-lg md:text-xl font-light tracking-widest transition-all duration-500 ${
             currentIndex >= letters.length - 1
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-4"
           }`}
+          style={{ color: "#E6C6B4" }}
         >
           Premium Skincare
         </div>
@@ -79,8 +82,9 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           {[0, 1, 2].map((dot) => (
             <div
               key={dot}
-              className="w-2 h-2 bg-[#E6C6B4 ] rounded-full animate-pulse"
+              className="w-2 h-2 rounded-full animate-pulse"
               style={{
+                backgroundColor: "#E6C6B4",
                 animationDelay: `${dot * 200}ms`,
                 animationDuration: "1s",
               }}
