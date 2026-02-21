@@ -1,10 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { User, LogOut } from "lucide-react"
-import { getUser, logout } from "@/lib/auth"
+import { signOut } from "@/lib/supabase/auth"
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 interface UserMenuProps {
   isMobile?: boolean;
@@ -13,31 +15,28 @@ interface UserMenuProps {
 
 export function UserMenu({ isMobile = false, onNavigate }: UserMenuProps) {
   const router = useRouter()
-  const [user, setUser] = useState(getUser())
+  const { user, loading } = useSupabaseAuth()
   const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setUser(getUser())
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      setIsOpen(false)
+      if (onNavigate) onNavigate()
+      router.push("/")
+      router.refresh()
+    } catch (error) {
+      console.error("Logout error:", error)
     }
+  }
 
-    window.addEventListener("storage", handleStorageChange)
-    window.addEventListener("userChanged", handleStorageChange)
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-      window.removeEventListener("userChanged", handleStorageChange)
-    }
-  }, [])
-
-  const handleLogout = () => {
-    logout()
-    setUser(null)
-    setIsOpen(false)
-    window.dispatchEvent(new Event("userChanged"))
-    if (onNavigate) onNavigate()
-    router.push("/")
-    router.refresh()
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="animate-pulse">
+        <div className="h-5 w-5 bg-gray-300 rounded-full" />
+      </div>
+    )
   }
 
   // Mobile: Direct link to login if not logged in
@@ -65,11 +64,31 @@ export function UserMenu({ isMobile = false, onNavigate }: UserMenuProps) {
 
   // Mobile: Show user details inline
   if (isMobile) {
+    const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'
+    const userAvatar = user.user_metadata?.avatar_url
+    
     return (
       <div className="px-4 py-2 space-y-2">
         <div className="border-b border-border pb-2">
-          <p className="text-sm font-medium">{user.name}</p>
-          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+          <div className="flex items-center gap-3 mb-2">
+            {userAvatar ? (
+              <Image 
+                src={userAvatar} 
+                alt={userName}
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <User className="h-4 w-4 text-primary" />
+              </div>
+            )}
+            <div>
+              <p className="text-sm font-medium">{userName}</p>
+              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+            </div>
+          </div>
         </div>
         <button
           onClick={handleLogout}
@@ -83,23 +102,55 @@ export function UserMenu({ isMobile = false, onNavigate }: UserMenuProps) {
   }
 
   // Desktop: Dropdown menu
+  const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'
+  const userAvatar = user.user_metadata?.avatar_url
+
   return (
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hover:text-primary transition-colors"
+        className="hover:text-primary transition-colors flex items-center justify-center"
         aria-label="User menu"
       >
-        <User className="h-5 w-5" />
+        {userAvatar ? (
+          <Image 
+            src={userAvatar} 
+            alt={userName}
+            width={56}
+            height={56}
+            className="rounded-full ring-2 ring-primary/20 hover:ring-primary/40 transition-all object-cover"
+            style={{ width: '35px', height: '35px', minWidth: '35px', minHeight: '35px' }}
+            priority
+          />
+        ) : (
+          <User className="h-14 w-14" style={{ width: '56px', height: '56px' }} />
+        )}
       </button>
 
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
             <div className="px-4 py-3 border-b border-border">
-              <p className="text-sm font-medium">{user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+              <div className="flex items-center gap-3 mb-2">
+                {userAvatar ? (
+                  <Image 
+                    src={userAvatar} 
+                    alt={userName}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{userName}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                </div>
+              </div>
             </div>
             <button
               onClick={handleLogout}

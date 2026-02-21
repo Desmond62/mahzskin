@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import type { Product } from "@/lib/types"
-import { getProducts, initializeProducts } from "@/lib/sample-products"
+import { getProducts } from "@/lib/supabase/database"
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([])
@@ -10,11 +10,16 @@ export function useProducts() {
 
   useEffect(() => {
     const loadProducts = async () => {
-      // Simulate loading delay to show skeleton
-      await new Promise(resolve => setTimeout(resolve, 800))
-      initializeProducts()
-      setProducts(getProducts())
-      setLoading(false)
+      try {
+        // Simulate loading delay to show skeleton
+        await new Promise(resolve => setTimeout(resolve, 800))
+        const data = await getProducts()
+        setProducts(data)
+      } catch (error) {
+        console.error("Error loading products:", error)
+      } finally {
+        setLoading(false)
+      }
     }
     
     loadProducts()
