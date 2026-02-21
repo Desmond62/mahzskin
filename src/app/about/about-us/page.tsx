@@ -20,7 +20,7 @@ export default function AboutUsPage() {
             <div className="max-w-6xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 {/* Left: Image */}
-                <div className="order-2 lg:order-1">
+                <div className="lg:order-1">
                   <div className="relative aspect-4/5 rounded-lg overflow-hidden group cursor-pointer">
                     <Image
                       src="/care.webp"
@@ -33,7 +33,7 @@ export default function AboutUsPage() {
                 </div>
                 
                 {/* Right: Content */}
-                <div className="order-1 lg:order-2 text-center lg:text-left">
+                <div className="lg:order-2 text-center lg:text-left">
                   <h2 className="text-3xl lg:text-4xl font-bold mb-6 font-playfair">
                     ABOUT MAHZ SKIN
                   </h2>
@@ -65,8 +65,21 @@ Just skincare that works — purely.
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
-                {/* Left: Content */}
-                <div className="text-center lg:text-left">
+                {/* Right: Image - First on mobile */}
+                <div className="lg:order-2">
+                  <div className="relative aspect-4/5 rounded-lg overflow-hidden group cursor-pointer">
+                    <Image
+                      src="/face-serrum.avif"
+                      alt="malzskin face serrum Product"
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+                </div>
+                
+                {/* Left: Content - Second on mobile */}
+                <div className="lg:order-1 text-center lg:text-left">
                   <h2 className="text-3xl lg:text-4xl font-bold mb-6 font-playfair">
                     OUR PHILOSOPHY
                   </h2>
@@ -88,19 +101,6 @@ Skincare should feel intelligent, intentional, and honest
                     EXPLORE
                   </button>
                 </div>
-                
-                {/* Right: Image */}
-                <div>
-                  <div className="relative aspect-4/5 rounded-lg overflow-hidden group cursor-pointer">
-                    <Image
-                      src="/face-serrum.avif"
-                      alt="malzskin face serrum Product"
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -113,8 +113,8 @@ Skincare should feel intelligent, intentional, and honest
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
-                {/* Left: Image */}
-                <div className="order-2 lg:order-1">
+                {/* Left: Image - First on mobile */}
+                <div className="lg:order-1">
                   <div className="relative aspect-4/5 rounded-lg overflow-hidden group cursor-pointer">
                     <Image
                       src="/dripping-cream.jpeg"
@@ -126,8 +126,8 @@ Skincare should feel intelligent, intentional, and honest
                   </div>
                 </div>
                 
-                {/* Right: Content */}
-                <div className="order-1 lg:order-2 text-center lg:text-left">
+                {/* Right: Content - Second on mobile */}
+                <div className="lg:order-2 text-center lg:text-left">
                   <h2 className="text-3xl lg:text-4xl font-bold mb-6 font-playfair">
                     OUR PILLARS 
                   </h2>

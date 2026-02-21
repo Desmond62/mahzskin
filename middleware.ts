@@ -1,29 +1,54 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
-    const path = request.nextUrl.pathname
-    const protectedRoutes = ["/checkout"]  // Only checkout requires authentication now
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  })
 
-    // Check if the path starts with any protected route
-    const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
-
-    if (isProtectedRoute) {
-        // For client-side routes, we'll handle auth in the components
-        // Middleware can't access localStorage, so we redirect to a check page
-        const authCheck = request.cookies.get("fw_auth_check")
-        
-        if (!authCheck) {
-            // Set a cookie to indicate we need to check auth on client side
-            const response = NextResponse.next()
-            response.cookies.set("fw_needs_auth_check", "true", { maxAge: 60 })
-            return response
-        }
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
     }
+  )
 
-    return NextResponse.next()
+  // Refresh session if expired
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Protected routes that require authentication
+  const protectedRoutes = ['/checkout']
+  const path = request.nextUrl.pathname
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
+
+  // Redirect to login if accessing protected route without authentication
+  if (isProtectedRoute && !user) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/auth/login'
+    redirectUrl.searchParams.set('redirectTo', path)
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  return supabaseResponse
 }
 
 export const config = {
-    matcher: ["/checkout"],  // Only protect checkout route
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 }
