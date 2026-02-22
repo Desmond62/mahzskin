@@ -136,6 +136,11 @@ export async function removeFromCart(cartItemId: string) {
 }
 
 export async function clearCart(userId: string) {
+  if (!userId) {
+    console.warn('Cannot clear cart: No user ID provided');
+    return;
+  }
+  
   const supabase = createClient();
   
   const { error } = await supabase
@@ -145,7 +150,8 @@ export async function clearCart(userId: string) {
 
   if (error) {
     console.error('Error clearing cart:', error);
-    throw error;
+    // Don't throw error, just log it to prevent app crashes
+    return;
   }
 }
 

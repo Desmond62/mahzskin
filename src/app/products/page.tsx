@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { useProducts } from "@/hooks/use-products";
 import { ProductGridSkeleton } from "@/components/ui/skeleton";
+import { OfflineMessage } from "@/components/offline-message";
 
 import { Grid, LayoutGrid, LayoutList, X } from "lucide-react";
 import { Button } from "@/components/ui";
@@ -24,7 +25,7 @@ type SortOption =
 function ProductsContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
-  const { products } = useProducts();
+  const { products, loading, error, retry } = useProducts();
 
   const [viewMode, setViewMode] = useState<ViewMode>("three");
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -445,28 +446,37 @@ function ProductsContent() {
           </div>
 
           {/* Products Grid */}
-          <div
-            className={`grid gap-3 sm:gap-4 lg:gap-6 mb-8 ${
-              viewMode === "one"
-                ? "grid-cols-1"
-                : viewMode === "two"
-                ? "grid-cols-2"
-                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            }`}
-          >
-            {displayedProducts.length === 0 ? (
-              <div className="col-span-full text-center py-8">
-                <p className="text-muted-foreground">No products found</p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Total products: {products.length}, Filtered: {filteredProducts.length}
-                </p>
-              </div>
-            ) : (
-              displayedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            )}
-          </div>
+          {error ? (
+            <div className="col-span-full">
+              <OfflineMessage 
+                onRetry={retry}
+                message="We couldn't load the products"
+              />
+            </div>
+          ) : (
+            <div
+              className={`grid gap-3 sm:gap-4 lg:gap-6 mb-8 ${
+                viewMode === "one"
+                  ? "grid-cols-1"
+                  : viewMode === "two"
+                  ? "grid-cols-2"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              }`}
+            >
+              {displayedProducts.length === 0 ? (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-muted-foreground">No products found</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Total products: {products.length}, Filtered: {filteredProducts.length}
+                  </p>
+                </div>
+              ) : (
+                displayedProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))
+              )}
+            </div>
+          )}
 
           {/* Pagination Info */}
           <div className="text-center mb-4 text-xs sm:text-sm text-muted-foreground">

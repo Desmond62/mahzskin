@@ -1,28 +1,61 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getProductById } from "@/lib/sample-products";
-import {
-  addToCart,
-  addToWishlist,
-  isInWishlist,
-  removeFromWishlist,
-} from "@/lib/storage";
+import { getProductById } from "@/lib/supabase/database";
+import { useSupabaseCart } from "@/hooks/use-supabase-cart";
+import { useSupabaseWishlist } from "@/hooks/use-supabase-wishlist";
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth";
 import { formatPrice, convertPrice, getCurrency } from "@/lib/currency-rates";
 import { showToast } from "@/components/toast";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type { Product } from "@/lib/types";
 
 export default function ProductPage() {
-  // Product page is now accessible to all users
-
   const params = useParams();
   const router = useRouter();
+  const { user } = useSupabaseAuth();
   const [currency, setCurrency] = useState(getCurrency());
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const { addItem: addToCartSupabase } = useSupabaseCart();
+  const { wishlist, addToWishlist: addToWishlistSupabase, removeItem: removeFromWishlistSupabase } = useSupabaseWishlist();
+
+  const productId = params.id as string;
+
+  // Check if product is in wishlist
+  const inWishlist = wishlist.some(item => item.id === productId);
+
+  // Fetch product from Supabase
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        setLoading(true);
+        const data = await getProductById(productId);
+        
+        if (!data) {
+          showToast("Product not found", "error");
+          router.push("/products");
+          return;
+        }
+        
+        setProduct(data);
+      } catch (error) {
+        console.error("Error loading product:", error);
+        showToast("Failed to load product", "error");
+        router.push("/products");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProduct();
+  }, [productId, router]);
 
   // Listen for currency changes
   useEffect(() => {
@@ -37,32 +70,7 @@ export default function ProductPage() {
     };
   }, []);
 
-  // Get product data directly without useEffect to avoid cascading renders
-  const productId = params.id as string;
-  const product = getProductById(productId);
-
-  // Derive wishlist state from productId - no useState needed for this
-  const initialInWishlist = useMemo(() => {
-    return product ? isInWishlist(productId) : false;
-  }, [product, productId]);
-
-  const [inWishlist, setInWishlist] = useState(initialInWishlist);
-
-  // Handle product not found - only side effects, no state updates
-  useEffect(() => {
-    if (!product) {
-      showToast("Product not found", "error");
-      router.push("/");
-      return;
-    }
-  }, [product, router]);
-
-  // Sync wishlist state when the derived value changes
-  useEffect(() => {
-    setInWishlist(initialInWishlist);
-  }, [initialInWishlist]);
-
-  if (!product) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
@@ -70,31 +78,57 @@ export default function ProductPage() {
     );
   }
 
+  if (!product) {
+    return null;
+  }
+
   const price = convertPrice(product.price, "NGN", currency);
 
-  const handleAddToCart = () => {
-    addToCart(product, quantity);
-    window.dispatchEvent(new Event("cartUpdated"));
+  const handleAddToCart = async () => {
+    if (!user) {
+      showToast("Please login to add items to cart", "error");
+      router.push("/auth/login");
+      return;
+    }
+
+    try {
+      await addToCartSupabase(product.id, quantity);
+      showToast(`${product.name} added to cart`, "success");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      showToast("Failed to add to cart", "error");
+    }
   };
 
-  const handleToggleWishlist = () => {
-    if (inWishlist) {
-      removeFromWishlist(product.id);
-      setInWishlist(false);
-    } else {
-      const added = addToWishlist(product);
-      if (added) {
-        setInWishlist(true);
-      }
+  const handleToggleWishlist = async () => {
+    if (!user) {
+      showToast("Please login to manage wishlist", "error");
+      router.push("/auth/login");
+      return;
     }
-    window.dispatchEvent(new Event("wishlistUpdated"));
+
+    try {
+      if (inWishlist) {
+        const wishlistItem = wishlist.find(item => item.id === productId);
+        if (wishlistItem?.wishlistItemId) {
+          await removeFromWishlistSupabase(wishlistItem.wishlistItemId);
+          showToast(`${product.name} removed from wishlist`, "info");
+        }
+      } else {
+        await addToWishlistSupabase(product.id);
+        showToast(`${product.name} added to wishlist`, "success");
+      }
+    } catch (error) {
+      console.error("Error toggling wishlist:", error);
+      showToast("Failed to update wishlist", "error");
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Back Button */}
       <Link
-        href="/"
+        href="/products"
         className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6"
       >
         <ArrowLeft className="h-4 w-4" />
