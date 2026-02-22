@@ -6,25 +6,35 @@ import { formatPrice, convertPrice, getCurrency } from "@/lib/currency-rates";
 import Link from "next/link";
 import { Button, Loader } from "./ui";
 import Image from "next/image";
-import { useCartStore } from "@/stores/cart-store";
+import { useSupabaseCart } from "@/hooks/use-supabase-cart";
+import { showToast } from "./toast";
 
 export function CartDrawer() {
-  const { 
-    isOpen, 
-    isVisible, 
-    cart, 
-    isCheckingOut, 
-    isViewingCart,
-    openDrawer,
-    closeDrawer,
-    toggleDrawer,
-    updateQuantity,
-    removeItem,
-    setIsCheckingOut,
-    setIsViewingCart
-  } = useCartStore();
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [currency, setCurrency] = useState("NGN");
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isViewingCart, setIsViewingCart] = useState(false);
+
+  const { cart, loading, updateQuantity, removeItem } = useSupabaseCart();
+
+  const openDrawer = () => {
+    setIsOpen(true);
+    setTimeout(() => setIsVisible(true), 10);
+  };
+
+  const closeDrawer = () => {
+    setIsVisible(false);
+    setTimeout(() => setIsOpen(false), 300);
+  };
+
+  const toggleDrawer = () => {
+    if (isOpen) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
+  };
 
   useEffect(() => {
     const handleToggle = () => toggleDrawer();
@@ -39,7 +49,8 @@ export function CartDrawer() {
       window.removeEventListener("toggleCart", handleToggle);
       window.removeEventListener("openCartDrawer", handleOpen);
     };
-  }, [isOpen, openDrawer, toggleDrawer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   useEffect(() => {
     const handleCurrencyChange = () => setCurrency(getCurrency());
@@ -49,13 +60,33 @@ export function CartDrawer() {
   }, []);
 
   const subtotal = cart.reduce((sum, item) => {
-    const price = convertPrice(item.product.price, "NGN", currency);
+    const price = convertPrice(item.price, "NGN", currency);
     return sum + price * item.quantity;
   }, 0);
 
   const shipping = 4000;
   const shippingConverted = convertPrice(shipping, "NGN", currency);
   const total = subtotal + shippingConverted;
+
+  const handleUpdateQuantity = async (cartItemId: string, newQuantity: number) => {
+    if (newQuantity < 1) return;
+    try {
+      await updateQuantity(cartItemId, newQuantity);
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      showToast("Failed to update quantity", "error");
+    }
+  };
+
+  const handleRemoveItem = async (cartItemId: string) => {
+    try {
+      await removeItem(cartItemId);
+      showToast("Item removed from cart", "success");
+    } catch (error) {
+      console.error("Error removing item:", error);
+      showToast("Failed to remove item", "error");
+    }
+  };
 
   const handleCheckout = () => {
     setIsCheckingOut(true);
@@ -105,41 +136,37 @@ export function CartDrawer() {
 
           {/* Cart items */}
           <div className="flex-1 overflow-y-auto p-6">
-            {cart.length === 0 ? (
+            {loading ? (
+              <div className="text-center py-12">
+                <Loader className="h-8 w-8 mx-auto" />
+                <p className="text-muted-foreground mt-2">Loading cart...</p>
+              </div>
+            ) : cart.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">Your cart is empty</p>
               </div>
             ) : (
               <div className="space-y-6">
                 {cart.map((item) => {
-                  const price = convertPrice(
-                    item.product.price,
-                    "NGN",
-                    currency
-                  );
+                  const price = convertPrice(item.price, "NGN", currency);
                   return (
-                    <div key={item.product.id} className="flex gap-4">
+                    <div key={item.cartItemId} className="flex gap-4">
                       <Image
-                        src={item.product.image || "/placeholder.svg"}
-                        alt={item.product.name}
+                        src={item.image || "/placeholder.svg"}
+                        alt={item.name}
                         className="w-20 h-20 object-cover rounded"
                         width={80}
                         height={80}
                       />
                       <div className="flex-1">
-                        <h3 className="font-medium text-sm">
-                          {item.product.name}
-                        </h3>
+                        <h3 className="font-medium text-sm">{item.name}</h3>
                         <p className="text-sm text-muted-foreground mt-1">
                           {formatPrice(price, currency)}
                         </p>
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() =>
-                              updateQuantity(
-                                item.product.id,
-                                item.quantity - 1
-                              )
+                              handleUpdateQuantity(item.cartItemId, item.quantity - 1)
                             }
                             className="h-6 w-6 rounded border border-border flex items-center justify-center hover:bg-accent"
                           >
@@ -150,10 +177,7 @@ export function CartDrawer() {
                           </span>
                           <button
                             onClick={() =>
-                              updateQuantity(
-                                item.product.id,
-                                item.quantity + 1
-                              )
+                              handleUpdateQuantity(item.cartItemId, item.quantity + 1)
                             }
                             className="h-6 w-6 rounded border border-border flex items-center justify-center hover:bg-accent"
                           >
@@ -162,7 +186,7 @@ export function CartDrawer() {
                         </div>
                       </div>
                       <button
-                        onClick={() => removeItem(item.product.id)}
+                        onClick={() => handleRemoveItem(item.cartItemId)}
                         className="text-muted-foreground hover:text-destructive transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />

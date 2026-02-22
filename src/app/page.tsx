@@ -249,13 +249,14 @@ created to enhance your skin’s natural richness.
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Image first on mobile, text first on desktop */}
             <FadeInRight className="relative h-full lg:order-2">
-              <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
+              <div className="relative aspect-4/4 rounded-2xl overflow-hidden group cursor-pointer h-full shadow-2xl">
                 <Image
                   src="/cream-girl.jpeg"
                   alt="Skincare for Queens"
-                  width={600}
+                  width={800}
                   height={600}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-500 brightness-105 contrast-110"
+                  priority
                 />
               </div>
             </FadeInRight>

@@ -1,11 +1,23 @@
 "use client"
 
-import { useWishlist } from "@/hooks/use-wishlist"
+import { useSupabaseWishlist } from "@/hooks/use-supabase-wishlist"
 import { ProductCard } from "@/components/product-card"
 import { Heart } from "lucide-react"
+import { Loader } from "@/components/ui/loader"
 
 export default function WishlistPage() {
-  const { wishlist } = useWishlist()
+  const { wishlist, loading } = useSupabaseWishlist()
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8E7DD] flex items-center justify-center">
+        <div className="text-center">
+          <Loader className="h-12 w-12 mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading wishlist...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[#F8E7DD]">
@@ -26,7 +38,7 @@ export default function WishlistPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {wishlist.map((item) => (
-              <ProductCard key={item.product.id} product={item.product} />
+              <ProductCard key={item.id} product={item} />
             ))}
           </div>
         )}

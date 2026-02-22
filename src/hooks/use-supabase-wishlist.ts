@@ -33,6 +33,18 @@ export function useSupabaseWishlist() {
 
   useEffect(() => {
     loadWishlist();
+    
+    // Listen for wishlist updates
+    const handleWishlistUpdate = () => {
+      loadWishlist();
+    };
+    
+    window.addEventListener("wishlistUpdated", handleWishlistUpdate);
+    
+    return () => {
+      window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const addToWishlist = async (productId: string) => {

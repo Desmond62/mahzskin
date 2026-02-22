@@ -40,4 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# documentation (optional - uncomment to exclude from git)
+# CONTACT_FORM_SETUP.md
+# SUPABASE_SETUP.md
+# MIGRATION_STATUS.md
+
 

@@ -8,6 +8,14 @@ import { getCart, getWishlist } from "@/lib/storage";
 import { UserMenu } from "./user-menu";
 import Image from "next/image";
 import { useUIStore } from "@/stores/ui-store";
+import { useSupabaseCart } from "@/hooks/use-supabase-cart";
+import { useSupabaseWishlist } from "@/hooks/use-supabase-wishlist";
+import type { Product } from "@/lib/types";
+
+interface CartItem extends Product {
+  quantity: number;
+  cartItemId: string;
+}
 
 const NAV_LINKS = [
   { href: "/", label: "HOME" },
@@ -47,6 +55,16 @@ export function Header() {
     toggleSearch,
     toggleMobileMenu,
   } = useUIStore();
+
+  const { cart: cartItems } = useSupabaseCart();
+  const { wishlist } = useSupabaseWishlist();
+
+  // Update counts from Supabase
+  useEffect(() => {
+    const totalCartItems = cartItems.reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
+    setCartCount(totalCartItems);
+    setWishlistCount(wishlist.length);
+  }, [cartItems, wishlist, setCartCount, setWishlistCount]);
 
   // Lock scroll when mobile menu is open
   useEffect(() => {
@@ -276,14 +294,14 @@ export function Header() {
           {!isScrolled && (
             <>
               {/* Mobile header */}
-              <div className="md:hidden flex items-center justify-between py-3 gap-2">
+              <div className="md:hidden flex items-center justify-between py-1.5 gap-2">
                 {/* Left: Menu Icon */}
                 <button
                   onClick={toggleMobileMenu}
                   className="hover:text-primary transition-colors p-1"
                   aria-label="Menu"
                 >
-                  <Menu className="h-7 w-7" strokeWidth={2.5} />
+                  <Menu className="h-6 w-6" strokeWidth={2.5} />
                 </button>
 
                 {/* Center: Logo */}
@@ -291,20 +309,20 @@ export function Header() {
                   <div className="text-center">
                     <Image src="/logo-removebg-preview.png"
                     alt="F&W Logo"
-                    width={120}
-                    height={120}
-                    className="object-cover h-24 w-auto" />
+                    width={80}
+                    height={80}
+                    className="object-cover h-16 w-auto" />
                   </div>
                 </Link>
 
                 {/* Right: Icons */}
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1.5">
                   <button
                     onClick={toggleSearch}
                     className="hover:text-primary transition-colors p-1"
                     aria-label="Search"
                   >
-                    <Search className="h-6 w-6" strokeWidth={2.5} />
+                    <Search className="h-5 w-5" strokeWidth={2.5} />
                   </button>
 
                   <Link
@@ -312,7 +330,7 @@ export function Header() {
                     className="relative hover:text-primary transition-colors p-1"
                     aria-label="Wishlist"
                   >
-                    <Heart className="h-6 w-6" strokeWidth={2.5} />
+                    <Heart className="h-5 w-5" strokeWidth={2.5} />
                     {wishlistCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium text-[10px]">
                         {wishlistCount}
@@ -327,7 +345,7 @@ export function Header() {
                     className="relative hover:text-primary transition-colors p-1"
                     aria-label="Shopping cart"
                   >
-                    <ShoppingCart className="h-6 w-6" strokeWidth={2.5} />
+                    <ShoppingCart className="h-5 w-5" strokeWidth={2.5} />
                     {cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium text-[10px]">
                         {cartCount}
@@ -338,7 +356,7 @@ export function Header() {
               </div>
 
               {/* Desktop header */}
-              <div className="hidden md:flex items-center justify-between py-4 gap-4">
+              <div className="hidden md:flex items-center justify-between py-3 gap-4">
                 {/* Left: Currency Selector */}
                 <div className="shrink-0 w-[120px]">
                   <CurrencySelector />
@@ -349,9 +367,9 @@ export function Header() {
                   <div className="text-center">
                     <Image src="/logo-removebg-preview.png"
                     alt="F&W Logo"
-                    width={120}
-                    height={120}
-                    className="object-cover h-24 w-auto" />
+                    width={100}
+                    height={100}
+                    className="object-cover h-20 w-auto" />
                   </div>
                 </Link>
 
@@ -457,7 +475,7 @@ export function Header() {
       <>
         {/* Overlay */}
         <div
-          className={`fixed inset-0 bg-black/60 z-[100] md:hidden transition-opacity duration-300 ${
+          className={`fixed inset-0 bg-black/60 z-100 md:hidden transition-opacity duration-300 ${
             mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
           onClick={toggleMobileMenu}
@@ -465,7 +483,7 @@ export function Header() {
 
         {/* Side Drawer */}
         <div
-          className={`fixed top-0 left-0 bottom-0 w-[280px] bg-background z-[101] md:hidden shadow-2xl transform transition-transform duration-300 ease-in-out ${
+          className={`fixed top-0 left-0 bottom-0 w-[280px] bg-background z-101 md:hidden shadow-2xl transform transition-transform duration-300 ease-in-out ${
             mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >

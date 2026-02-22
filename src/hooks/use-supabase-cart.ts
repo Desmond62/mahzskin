@@ -34,6 +34,18 @@ export function useSupabaseCart() {
 
   useEffect(() => {
     loadCart();
+    
+    // Listen for cart updates
+    const handleCartUpdate = () => {
+      loadCart();
+    };
+    
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const addToCart = async (productId: string, quantity: number = 1) => {

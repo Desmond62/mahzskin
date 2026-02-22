@@ -4,9 +4,12 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Heart } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { addToCart, addToWishlist, isInWishlist, removeFromWishlist } from "@/lib/storage";
 import { formatPrice, convertPrice, getCurrency } from "@/lib/currency-rates";
 import { Loader } from "@/components/ui/loader";
+import { useSupabaseCart } from "@/hooks/use-supabase-cart";
+import { useSupabaseWishlist } from "@/hooks/use-supabase-wishlist";
+import { useSupabaseAuth } from "@/hooks/use-supabase-auth";
+import { showToast } from "./toast";
 
 interface QuickViewModalProps {
   product: Product;
@@ -18,9 +21,16 @@ interface QuickViewModalProps {
 export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickViewModalProps) {
   const [currency, setCurrency] = useState(getCurrency());
   const [quantity, setQuantity] = useState(1);
-  const [inWishlist, setInWishlist] = useState(isInWishlist(product.id));
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuying, setIsBuying] = useState(false);
+  const [showHeartSplash, setShowHeartSplash] = useState(false);
+
+  const { user } = useSupabaseAuth();
+  const { addToCart } = useSupabaseCart();
+  const { wishlist, addToWishlist, removeItem } = useSupabaseWishlist();
+  
+  const wishlistItem = wishlist.find(item => item.id === product.id);
+  const inWishlist = !!wishlistItem;
 
   // Lock scroll when modal is open
   useEffect(() => {
@@ -52,46 +62,77 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
 
   const price = convertPrice(product.price, "NGN", currency);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsAddingToCart(true);
-    setTimeout(() => {
-      addToCart(product, quantity);
-      window.dispatchEvent(new Event("cartUpdated"));
-      setIsAddingToCart(false);
-      onClose();
-    }, 500);
-  };
-
-  const handleBuyNow = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsBuying(true);
-    setTimeout(() => {
-      addToCart(product, quantity);
-      window.dispatchEvent(new Event("cartUpdated"));
-      // Open cart drawer
-      window.dispatchEvent(new Event("openCartDrawer"));
-      setIsBuying(false);
-      onClose();
-    }, 500);
-  };
-
-  const handleToggleWishlist = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (inWishlist) {
-      removeFromWishlist(product.id);
-      setInWishlist(false);
-    } else {
-      const added = addToWishlist(product);
-      if (added) {
-        setInWishlist(true);
-      }
+    if (!user) {
+      window.location.href = "/auth/login";
+      return;
     }
-    window.dispatchEvent(new Event("wishlistUpdated"));
+    
+    setIsAddingToCart(true);
+    try {
+      await addToCart(product.id, quantity);
+      showToast(`"${product.name}" (${quantity}x) added to cart!`, "success");
+      onClose();
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      showToast("Failed to add product to cart", "error");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleBuyNow = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      window.location.href = "/auth/login";
+      return;
+    }
+    
+    setIsBuying(true);
+    try {
+      await addToCart(product.id, quantity);
+      showToast(`"${product.name}" (${quantity}x) added to cart!`, "success");
+      // Open cart drawer
+      window.dispatchEvent(new Event("toggleCart"));
+      onClose();
+    } catch (error) {
+      console.error("Error buying now:", error);
+      showToast("Failed to add product to cart", "error");
+    } finally {
+      setIsBuying(false);
+    }
+  };
+
+  const handleToggleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      window.location.href = "/auth/login";
+      return;
+    }
+    
+    // Trigger splash animation
+    setShowHeartSplash(true);
+    setTimeout(() => setShowHeartSplash(false), 600);
+    
+    try {
+      if (inWishlist && wishlistItem) {
+        await removeItem(wishlistItem.wishlistItemId);
+        showToast(`"${product.name}" removed from wishlist`, "success");
+      } else {
+        await addToWishlist(product.id);
+        showToast(`"${product.name}" added to wishlist!`, "success");
+      }
+    } catch (error) {
+      console.error("Error toggling wishlist:", error);
+      showToast("Failed to update wishlist", "error");
+    }
   };
 
   const modalContent = (
@@ -187,14 +228,21 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
                     
                     <button
                       onClick={handleToggleWishlist}
-                      className="p-3 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+                      className="p-3 border border-gray-300 rounded hover:bg-gray-100 transition-colors relative overflow-hidden"
                       aria-label="Add to wishlist"
                     >
                       <Heart
-                        className={`h-5 w-5 ${
-                          inWishlist ? "fill-red-500 text-red-500" : "text-gray-600"
+                        className={`h-5 w-5 transition-all duration-300 ${
+                          inWishlist ? "fill-red-500 text-red-500 scale-110" : "text-gray-600"
                         }`}
                       />
+                      {/* Splash effect */}
+                      {showHeartSplash && (
+                        <>
+                          <span className="absolute inset-0 rounded bg-red-500/30 animate-ping" />
+                          <span className="absolute inset-0 rounded bg-red-500/20 animate-pulse" />
+                        </>
+                      )}
                     </button>
                   </div>
 
