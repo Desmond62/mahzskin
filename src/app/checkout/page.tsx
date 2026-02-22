@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { CartItem } from "@/lib/types";
-import { getCart } from "@/lib/storage";
 import { formatPrice, convertPrice, getCurrency } from "@/lib/currency-rates";
 import {
   Button,
@@ -14,9 +12,11 @@ import {
 } from "@/components/ui";
 import Link from "next/link";
 import Image from "next/image";
+import { useSupabaseCart } from "@/hooks/use-supabase-cart";
+import { Loader } from "@/components/ui/loader";
 
 export default function CheckoutPage() {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { cart, loading } = useSupabaseCart();
   const [currency, setCurrency] = useState("NGN");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -36,16 +36,11 @@ export default function CheckoutPage() {
   const [showOrderSummary, setShowOrderSummary] = useState(false);
 
   useEffect(() => {
-    const initializeCheckout = () => {
-      setCart(getCart());
-      setCurrency(getCurrency());
-    };
-
-    initializeCheckout();
+    setCurrency(getCurrency());
   }, []);
 
   const subtotal = cart.reduce((sum, item) => {
-    const price = convertPrice(item.product.price, "NGN", currency);
+    const price = convertPrice(item.price, "NGN", currency);
     return sum + price * item.quantity;
   }, 0);
 
@@ -66,38 +61,44 @@ export default function CheckoutPage() {
         <div className="max-w-7xl mx-auto">
           {/* Mobile Order Summary Toggle - Only visible on mobile */}
           <div className="lg:hidden mb-4 bg-accent/30 p-4 rounded-lg">
-            <button
-              onClick={() => setShowOrderSummary(!showOrderSummary)}
-              className="w-full flex items-center justify-between"
-            >
-              <div className="flex items-center gap-2 text-primary">
-                <svg
-                  className={`h-4 w-4 transition-transform ${showOrderSummary ? 'rotate-180' : ''}`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-                <span className="text-sm font-medium">
-                  {showOrderSummary ? 'Hide' : 'Show'} order summary
-                </span>
+            {loading ? (
+              <div className="text-center py-4">
+                <Loader className="h-6 w-6 mx-auto" />
               </div>
-              <span className="text-lg font-bold">{formatPrice(total, currency)}</span>
-            </button>
+            ) : (
+              <button
+                onClick={() => setShowOrderSummary(!showOrderSummary)}
+                className="w-full flex items-center justify-between"
+              >
+                <div className="flex items-center gap-2 text-primary">
+                  <svg
+                    className={`h-4 w-4 transition-transform ${showOrderSummary ? 'rotate-180' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <span className="text-sm font-medium">
+                    {showOrderSummary ? 'Hide' : 'Show'} order summary
+                  </span>
+                </div>
+                <span className="text-lg font-bold">{formatPrice(total, currency)}</span>
+              </button>
+            )}
 
             {/* Collapsible Order Summary */}
             {showOrderSummary && (
               <div className="mt-4 space-y-4 animate-in slide-in-from-top-2">
                 {/* Cart items */}
                 {cart.map((item) => {
-                  const price = convertPrice(item.product.price, "NGN", currency);
+                  const price = convertPrice(item.price, "NGN", currency);
                   return (
-                    <div key={item.product.id} className="flex gap-3">
+                    <div key={item.cartItemId} className="flex gap-3">
                       <div className="relative shrink-0">
                         <Image
-                          src={item.product.image || "/placeholder.svg"}
-                          alt={item.product.name}
+                          src={item.image || "/placeholder.svg"}
+                          alt={item.name}
                           className="w-16 h-16 object-cover rounded border border-border"
                           width={64}
                           height={64}
@@ -107,8 +108,8 @@ export default function CheckoutPage() {
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium line-clamp-2">{item.product.name}</h3>
-                        <p className="text-xs text-muted-foreground mt-1">{item.product.category}</p>
+                        <h3 className="text-sm font-medium line-clamp-2">{item.name}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">{item.category}</p>
                       </div>
                       <p className="text-sm font-semibold shrink-0">
                         {formatPrice(price * item.quantity, currency)}
@@ -606,16 +607,16 @@ export default function CheckoutPage() {
                 {/* Cart items */}
                 {cart.map((item) => {
                   const price = convertPrice(
-                    item.product.price,
+                    item.price,
                     "NGN",
                     currency
                   );
                   return (
-                    <div key={item.product.id} className="flex gap-3 sm:gap-4">
+                    <div key={item.cartItemId} className="flex gap-3 sm:gap-4">
                       <div className="relative shrink-0">
                         <Image
-                          src={item.product.image || "/placeholder.svg"}
-                          alt={item.product.name}
+                          src={item.image || "/placeholder.svg"}
+                          alt={item.name}
                           className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded border border-border"
                           width={100}
                           height={100}
@@ -626,10 +627,10 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-xs sm:text-sm font-medium line-clamp-2">
-                          {item.product.name}
+                          {item.name}
                         </h3>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {item.product.category}
+                          {item.category}
                         </p>
                       </div>
                       <p className="text-xs sm:text-sm font-semibold shrink-0">

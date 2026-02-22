@@ -1,54 +1,53 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useAuth } from "@/hooks/use-auth"
 import { Minus, Plus, Trash2, ArrowRight } from "lucide-react"
-import type { CartItem } from "@/lib/types"
-import { getCart, updateCartQuantity, removeFromCart } from "@/lib/storage"
 import { formatPrice, convertPrice, getCurrency } from "@/lib/currency-rates"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from 'next/image'
+import { useSupabaseCart } from "@/hooks/use-supabase-cart"
+import { showToast } from "@/components/toast"
+import { Loader } from "@/components/ui/loader"
 
 export default function CartPage() {
-  // Cart page is now accessible to all users
-  
-  const [cart, setCart] = useState<CartItem[]>([])
   const [currency, setCurrency] = useState("NGN")
   const [couponCode, setCouponCode] = useState("")
   const [country, setCountry] = useState("Nigeria")
   const [state, setState] = useState("Abia")
 
-  useEffect(() => {
-    const initializeCart = () => {
-      setCart(getCart())
-      setCurrency(getCurrency())
-    }
-    
-    initializeCart()
+  const { cart, loading, updateQuantity, removeItem } = useSupabaseCart()
 
+  useEffect(() => {
+    setCurrency(getCurrency())
     const handleCurrencyChange = () => setCurrency(getCurrency())
     window.addEventListener("currencyChange", handleCurrencyChange)
-
     return () => window.removeEventListener("currencyChange", handleCurrencyChange)
   }, [])
 
-  const handleUpdateQuantity = (productId: string, newQuantity: number) => {
+  const handleUpdateQuantity = async (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return
-    updateCartQuantity(productId, newQuantity)
-    setCart(getCart())
-    window.dispatchEvent(new Event("cartUpdated"))
+    try {
+      await updateQuantity(cartItemId, newQuantity)
+    } catch (error) {
+      console.error("Error updating quantity:", error)
+      showToast("Failed to update quantity", "error")
+    }
   }
 
-  const handleRemove = (productId: string) => {
-    removeFromCart(productId)
-    setCart(getCart())
-    window.dispatchEvent(new Event("cartUpdated"))
+  const handleRemove = async (cartItemId: string) => {
+    try {
+      await removeItem(cartItemId)
+      showToast("Item removed from cart", "info")
+    } catch (error) {
+      console.error("Error removing item:", error)
+      showToast("Failed to remove item", "error")
+    }
   }
 
   const subtotal = cart.reduce((sum, item) => {
-    const price = convertPrice(item.product.price, "NGN", currency)
+    const price = convertPrice(item.price, "NGN", currency)
     return sum + price * item.quantity
   }, 0)
 
@@ -62,7 +61,12 @@ export default function CartPage() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-2">YOUR CART</h1>
 
-        {cart.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-16">
+            <Loader className="h-12 w-12 mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading cart...</p>
+          </div>
+        ) : cart.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-xl text-muted-foreground mb-6">Your cart is empty</p>
             <Button asChild size="lg">
@@ -100,24 +104,24 @@ export default function CartPage() {
 
                   {/* Cart items */}
                   {cart.map((item) => {
-                    const price = convertPrice(item.product.price, "NGN", currency)
+                    const price = convertPrice(item.price, "NGN", currency)
                     const itemTotal = price * item.quantity
 
                     return (
-                      <div key={item.product.id}>
+                      <div key={item.cartItemId}>
                         {/* Desktop layout */}
                         <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-6 border-b border-border items-center">
                           <div className="col-span-5 flex items-center gap-4">
                             <Image
-                              src={item.product.image || "/placeholder.svg"}
-                              alt={item.product.name}
+                              src={item.image || "/placeholder.svg"}
+                              alt={item.name}
                               width={80}
                               height={80}
                               className="w-20 h-20 object-cover rounded"
                             />
                             <div>
-                              <h3 className="font-medium text-sm mb-1">{item.product.name}</h3>
-                              <p className="text-xs text-muted-foreground">{item.product.category}</p>
+                              <h3 className="font-medium text-sm mb-1">{item.name}</h3>
+                              <p className="text-xs text-muted-foreground">{item.category}</p>
                             </div>
                           </div>
 
@@ -127,20 +131,20 @@ export default function CartPage() {
 
                           <div className="col-span-3 flex items-center justify-center gap-2">
                             <button
-                              onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
+                              onClick={() => handleUpdateQuantity(item.cartItemId, item.quantity - 1)}
                               className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
                             >
                               <Minus className="h-4 w-4" />
                             </button>
                             <span className="text-sm w-12 text-center font-medium">{item.quantity}</span>
                             <button
-                              onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
+                              onClick={() => handleUpdateQuantity(item.cartItemId, item.quantity + 1)}
                               className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
                             >
                               <Plus className="h-4 w-4" />
                             </button>
                             <button
-                              onClick={() => handleRemove(item.product.id)}
+                              onClick={() => handleRemove(item.cartItemId)}
                               className="ml-2 text-muted-foreground hover:text-destructive transition-colors"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -156,15 +160,15 @@ export default function CartPage() {
                         <div className="md:hidden p-4 border-b border-border">
                           <div className="flex gap-4 mb-4">
                             <Image
-                              src={item.product.image || "/placeholder.svg"}
-                              alt={item.product.name}
+                              src={item.image || "/placeholder.svg"}
+                              alt={item.name}
                               width={80}
                               height={80}
                               className="w-20 h-20 object-cover rounded flex-shrink-0"
                             />
                             <div className="flex-1 min-w-0">
-                              <h3 className="font-medium text-sm mb-1 line-clamp-2">{item.product.name}</h3>
-                              <p className="text-xs text-muted-foreground mb-2">{item.product.category}</p>
+                              <h3 className="font-medium text-sm mb-1 line-clamp-2">{item.name}</h3>
+                              <p className="text-xs text-muted-foreground mb-2">{item.category}</p>
                               <p className="font-semibold text-sm">{formatPrice(price, currency)}</p>
                             </div>
                           </div>
@@ -172,14 +176,14 @@ export default function CartPage() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <button
-                                onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
+                                onClick={() => handleUpdateQuantity(item.cartItemId, item.quantity - 1)}
                                 className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
                               >
                                 <Minus className="h-4 w-4" />
                               </button>
                               <span className="text-sm w-8 text-center font-medium">{item.quantity}</span>
                               <button
-                                onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
+                                onClick={() => handleUpdateQuantity(item.cartItemId, item.quantity + 1)}
                                 className="h-8 w-8 rounded border border-border flex items-center justify-center hover:bg-accent"
                               >
                                 <Plus className="h-4 w-4" />
@@ -192,7 +196,7 @@ export default function CartPage() {
                                 <p className="font-semibold">{formatPrice(itemTotal, currency)}</p>
                               </div>
                               <button
-                                onClick={() => handleRemove(item.product.id)}
+                                onClick={() => handleRemove(item.cartItemId)}
                                 className="text-muted-foreground hover:text-destructive transition-colors"
                               >
                                 <Trash2 className="h-5 w-5" />
