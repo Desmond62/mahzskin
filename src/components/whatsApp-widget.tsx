@@ -3,23 +3,36 @@ import type { ChangeEvent } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
-// import { BsEmojiSmile } from "react-icons/bs";
-import  {  useRef } from "react";
+import { useRef, useEffect } from "react";
 
 const WhatsAppWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
-
-//  Loading state for emoji picker
   const [loadingEmoji, setLoadingEmoji] = useState<boolean>(false);
+  const [isDesktop, setIsDesktop] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-//   Focus input on mount
-   const inputRef = useRef<HTMLInputElement>(null);
+  const phoneNumber = "2347077723208";
 
- 
+  // Detect if desktop
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
 
-  const phoneNumber = "2347077723208"; // your real WhatsApp number
+  // Auto-focus input when chat opens on desktop only
+  useEffect(() => {
+    if (isOpen && isDesktop && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen, isDesktop]);
 
 // Toggle emoji picker visibility with loading state
   const handleToggleEmoji = () => {

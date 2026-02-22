@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Heart, ShoppingCart, Search, Menu, X, ChevronDown } from "lucide-react";
 import { CurrencySelector } from "./currency-selector";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { getCart, getWishlist } from "@/lib/storage";
 import { UserMenu } from "./user-menu";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { useUIStore } from "@/stores/ui-store";
 import { useSupabaseCart } from "@/hooks/use-supabase-cart";
 import { useSupabaseWishlist } from "@/hooks/use-supabase-wishlist";
 import type { Product } from "@/lib/types";
+import { SearchBar } from "./search-bar";
 
 interface CartItem extends Product {
   quantity: number;
@@ -580,17 +581,11 @@ export function Header() {
             onClick={toggleSearch}
           />
 
-          {/* Search bar */}
+          {/* Search bar with suggestions */}
           <div className="fixed top-24 left-0 right-0 z-70 px-4">
-            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-              <input
-                type="search"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 text-base border-2 border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-ring bg-white shadow-2xl"
-              />
-            </form>
+            <div className="max-w-2xl mx-auto">
+              <SearchBar />
+            </div>
           </div>
         </>
       )}
