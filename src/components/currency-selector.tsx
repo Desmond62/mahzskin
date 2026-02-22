@@ -21,9 +21,16 @@ export function CurrencySelector() {
   const [isAnimating, setIsAnimating] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleOpen = () => {
-    setIsOpen(true);
-    setIsAnimating(true);
+  const handleToggle = () => {
+    if (isOpen) {
+      // Close the dropdown
+      setIsAnimating(false);
+      setTimeout(() => setIsOpen(false), 300);
+    } else {
+      // Open the dropdown
+      setIsOpen(true);
+      setIsAnimating(true);
+    }
   };
 
   const handleClose = useCallback(() => {
@@ -60,12 +67,12 @@ export function CurrencySelector() {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={handleOpen}
+        onClick={handleToggle}
         className="flex items-center gap-1 text-sm font-medium hover:text-primary transition-colors"
         aria-label="Select currency"
       >
         {selectedCurrency}
-        <ChevronDown className="h-4 w-4" />
+        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (

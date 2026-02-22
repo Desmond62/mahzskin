@@ -11,9 +11,11 @@ import Image from "next/image"
 interface UserMenuProps {
   isMobile?: boolean;
   onNavigate?: () => void;
+  showLogout?: boolean;
+  showOnlyLogout?: boolean;
 }
 
-export function UserMenu({ isMobile = false, onNavigate }: UserMenuProps) {
+export function UserMenu({ isMobile = false, onNavigate, showLogout = true, showOnlyLogout = false }: UserMenuProps) {
   const router = useRouter()
   const { user, loading } = useSupabaseAuth()
   const [isOpen, setIsOpen] = useState(false)
@@ -39,16 +41,34 @@ export function UserMenu({ isMobile = false, onNavigate }: UserMenuProps) {
     )
   }
 
+  // Mobile: Show only logout button if requested
+  if (isMobile && showOnlyLogout && user) {
+    return (
+      <button
+        onClick={handleLogout}
+        className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-accent rounded transition-colors flex items-center gap-2 text-red-600 hover:text-red-700"
+      >
+        <LogOut className="h-5 w-5" />
+        Logout
+      </button>
+    )
+  }
+
   // Mobile: Direct link to login if not logged in
   if (!user && isMobile) {
     return (
       <Link 
         href="/auth/login" 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+        className="flex items-center gap-3 px-6 py-4 hover:bg-accent transition-colors"
         onClick={onNavigate}
       >
-        <User className="h-5 w-5" />
-        Login / Register
+        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+          <User className="h-6 w-6 text-primary" />
+        </div>
+        <div>
+          <p className="text-sm font-medium">Login / Register</p>
+          <p className="text-xs text-muted-foreground">Access your account</p>
+        </div>
       </Link>
     )
   }
@@ -68,35 +88,26 @@ export function UserMenu({ isMobile = false, onNavigate }: UserMenuProps) {
     const userAvatar = user.user_metadata?.avatar_url
     
     return (
-      <div className="px-4 py-2 space-y-2">
-        <div className="border-b border-border pb-2">
-          <div className="flex items-center gap-3 mb-2">
-            {userAvatar ? (
-              <Image 
-                src={userAvatar} 
-                alt={userName}
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-            ) : (
-              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="h-4 w-4 text-primary" />
-              </div>
-            )}
-            <div>
-              <p className="text-sm font-medium">{userName}</p>
-              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+      <div className="px-6 py-4">
+        <div className="flex items-center gap-3">
+          {userAvatar ? (
+            <Image 
+              src={userAvatar} 
+              alt={userName}
+              width={48}
+              height={48}
+              className="rounded-full ring-2 ring-primary/20"
+            />
+          ) : (
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <User className="h-6 w-6 text-primary" />
             </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate">{userName}</p>
+            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
           </div>
         </div>
-        <button
-          onClick={handleLogout}
-          className="w-full text-left px-4 py-2 text-sm hover:bg-accent rounded transition-colors flex items-center gap-2"
-        >
-          <LogOut className="h-4 w-4" />
-          Logout
-        </button>
       </div>
     )
   }

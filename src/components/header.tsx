@@ -154,14 +154,36 @@ export function Header() {
           {/* Scrolled simplified header - shown when scrolled */}
           {isScrolled && (
             <div className="flex items-center justify-between py-2 sm:py-3 gap-2 sm:gap-4">
-              {/* Left: Logo */}
-              <Link href="/" className="shrink-0">
+              {/* Left: Menu Icon (mobile only) */}
+              <div className="lg:hidden">
+                <button
+                  onClick={toggleMobileMenu}
+                  className="hover:text-primary transition-colors p-1"
+                  aria-label="Menu"
+                >
+                  <Menu className="h-7 w-7" strokeWidth={2.5} />
+                </button>
+              </div>
+
+              {/* Left: Logo (desktop) */}
+              <Link href="/" className="hidden lg:block shrink-0">
                 <Image
                   src="/logo-removebg-preview.png"
                   alt="Mahz Logo"
                   width={80}
                   height={80}
                   className="object-cover h-14 sm:h-16 w-auto"
+                />
+              </Link>
+
+              {/* Center: Logo (mobile) */}
+              <Link href="/" className="lg:hidden absolute left-1/2 transform -translate-x-1/2">
+                <Image
+                  src="/logo-removebg-preview.png"
+                  alt="Mahz Logo"
+                  width={80}
+                  height={80}
+                  className="object-cover h-14 w-auto"
                 />
               </Link>
 
@@ -209,14 +231,14 @@ export function Header() {
                 </ul>
               </nav>
 
-              {/* Right: Search, Wishlist, Cart, Menu (mobile) */}
+              {/* Right: Search, Wishlist, Cart */}
               <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                 <button
                   onClick={toggleSearch}
                   className="hover:text-primary transition-colors p-1"
                   aria-label="Search"
                 >
-                  <Search className="h-5 w-5 sm:h-5 sm:w-5" />
+                  <Search className="h-6 w-6" strokeWidth={2.5} />
                 </button>
 
                 <Link
@@ -224,7 +246,7 @@ export function Header() {
                   className="relative hover:text-primary transition-colors p-1"
                   aria-label="Wishlist"
                 >
-                  <Heart className="h-5 w-5 sm:h-5 sm:w-5" />
+                  <Heart className="h-6 w-6" strokeWidth={2.5} />
                   {wishlistCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                       {wishlistCount}
@@ -239,24 +261,11 @@ export function Header() {
                   className="relative hover:text-primary transition-colors p-1"
                   aria-label="Shopping cart"
                 >
-                  <ShoppingCart className="h-5 w-5 sm:h-5 sm:w-5" />
+                  <ShoppingCart className="h-6 w-6" strokeWidth={2.5} />
                   {cartCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-medium text-[9px] sm:text-[10px]">
                       {cartCount}
                     </span>
-                  )}
-                </button>
-
-                {/* Mobile menu button */}
-                <button
-                  onClick={toggleMobileMenu}
-                  className="lg:hidden hover:text-primary transition-colors p-1"
-                  aria-label="Menu"
-                >
-                  {mobileMenuOpen ? (
-                    <X className="h-5 w-5 sm:h-5 sm:w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5 sm:h-5 sm:w-5" />
                   )}
                 </button>
               </div>
@@ -268,10 +277,14 @@ export function Header() {
             <>
               {/* Mobile header */}
               <div className="md:hidden flex items-center justify-between py-3 gap-2">
-                {/* Left: Currency Selector */}
-                <div className="shrink-0 w-16">
-                  <CurrencySelector />
-                </div>
+                {/* Left: Menu Icon */}
+                <button
+                  onClick={toggleMobileMenu}
+                  className="hover:text-primary transition-colors p-1"
+                  aria-label="Menu"
+                >
+                  <Menu className="h-7 w-7" strokeWidth={2.5} />
+                </button>
 
                 {/* Center: Logo */}
                 <Link href="/" className="shrink-0">
@@ -291,7 +304,7 @@ export function Header() {
                     className="hover:text-primary transition-colors p-1"
                     aria-label="Search"
                   >
-                    <Search className="h-5 w-5 sm:h-5 sm:w-5" />
+                    <Search className="h-6 w-6" strokeWidth={2.5} />
                   </button>
 
                   <Link
@@ -299,7 +312,7 @@ export function Header() {
                     className="relative hover:text-primary transition-colors p-1"
                     aria-label="Wishlist"
                   >
-                    <Heart className="h-5 w-5 sm:h-5 sm:w-5" />
+                    <Heart className="h-6 w-6" strokeWidth={2.5} />
                     {wishlistCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium text-[10px]">
                         {wishlistCount}
@@ -314,23 +327,11 @@ export function Header() {
                     className="relative hover:text-primary transition-colors p-1"
                     aria-label="Shopping cart"
                   >
-                    <ShoppingCart className="h-5 w-5 sm:h-5 sm:w-5" />
+                    <ShoppingCart className="h-6 w-6" strokeWidth={2.5} />
                     {cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-medium text-[10px]">
                         {cartCount}
                       </span>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={toggleMobileMenu}
-                    className="hover:text-primary transition-colors p-1"
-                    aria-label="Menu"
-                  >
-                    {mobileMenuOpen ? (
-                      <X className="h-5 w-5 sm:h-5 sm:w-5" />
-                    ) : (
-                      <Menu className="h-5 w-5 sm:h-5 sm:w-5" />
                     )}
                   </button>
                 </div>
@@ -449,11 +450,50 @@ export function Header() {
               </ul>
             </nav>
           )}
+        </div>
+      </header>
 
-          {/* Mobile Navigation Menu */}
-          {mobileMenuOpen && (
-            <nav className="md:hidden border-t border-border py-4 animate-in slide-in-from-top-2">
-              <ul className="space-y-3">
+      {/* Mobile Side Drawer Navigation - Outside header for proper layering */}
+      <>
+        {/* Overlay */}
+        <div
+          className={`fixed inset-0 bg-black/60 z-[100] md:hidden transition-opacity duration-300 ${
+            mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          onClick={toggleMobileMenu}
+        />
+
+        {/* Side Drawer */}
+        <div
+          className={`fixed top-0 left-0 bottom-0 w-[280px] bg-background z-[101] md:hidden shadow-2xl transform transition-transform duration-300 ease-in-out ${
+            mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            {/* Close button */}
+            <div className="flex justify-end p-4 border-b border-border">
+              <button
+                onClick={toggleMobileMenu}
+                className="hover:text-primary transition-colors p-1"
+                aria-label="Close menu"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* User Info Section */}
+            <div className="border-b border-border">
+              <UserMenu isMobile={true} onNavigate={() => setMobileMenuOpen(false)} showLogout={false} />
+            </div>
+
+            {/* Currency Selector */}
+            <div className="border-b border-border px-6 py-4">
+              <CurrencySelector />
+            </div>
+
+            {/* Navigation Links */}
+            <nav className="flex-1 overflow-y-auto py-4">
+              <ul className="space-y-1">
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>
                     {link.dropdown ? (
@@ -461,18 +501,18 @@ export function Header() {
                       <div>
                         <button
                           onClick={() => setAboutDropdownOpen(!aboutDropdownOpen)}
-                          className="flex items-center justify-between w-full px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+                          className="flex items-center justify-between w-full px-6 py-3 text-sm font-medium hover:bg-accent transition-colors"
                         >
                           {link.label}
                           <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
                         </button>
                         {aboutDropdownOpen && (
-                          <div className="ml-4 mt-2 space-y-1">
+                          <div className="bg-accent/50">
                             {link.dropdown.map((dropdownItem) => (
                               <Link
                                 key={dropdownItem.href}
                                 href={dropdownItem.href}
-                                className="block px-4 py-2 text-sm text-muted-foreground hover:bg-accent rounded transition-colors"
+                                className="block px-10 py-2 text-sm text-muted-foreground hover:bg-accent transition-colors"
                                 onClick={() => setMobileMenuOpen(false)}
                               >
                                 {dropdownItem.label}
@@ -485,7 +525,7 @@ export function Header() {
                       // Regular mobile menu item
                       <Link
                         href={link.href}
-                        className="block px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+                        className="block px-6 py-3 text-sm font-medium hover:bg-accent transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {link.label}
@@ -493,14 +533,16 @@ export function Header() {
                     )}
                   </li>
                 ))}
-                <li>
-                  <UserMenu isMobile={true} onNavigate={() => setMobileMenuOpen(false)} />
-                </li>
               </ul>
             </nav>
-          )}
+
+            {/* Logout Button at Bottom */}
+            <div className="border-t border-border p-4">
+              <UserMenu isMobile={true} onNavigate={() => setMobileMenuOpen(false)} showOnlyLogout={true} />
+            </div>
+          </div>
         </div>
-      </header>
+      </>
 
       {/* Spacer to prevent content jump */}
       <div
