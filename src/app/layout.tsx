@@ -13,7 +13,7 @@
 // });
 
 // export const metadata: Metadata = {
-//    title: "Fair & White - Premium Skincare",
+//    title: "Mahzskin - Premium Skincare",
 //   description: "Luxury skincare products for radiant, healthy skin",
 // };
 

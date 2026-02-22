@@ -179,7 +179,7 @@ export default function ContactPage() {
                 <Mail className="h-5 w-5 mt-1 shrink-0" />
                 <div>
                   <a
-                    href="mailto:info@fairandwhite.com"
+                    href="mailto:mahzskinltd@gmail.com"
                     className=" hover:underline"
                   >
                    mahzskinltd@gmail.com

@@ -37,6 +37,14 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setCurrency(getCurrency());
+    
+    // Listen for currency changes
+    const handleCurrencyChange = () => {
+      setCurrency(getCurrency());
+    };
+    
+    window.addEventListener("currencyChange", handleCurrencyChange);
+    return () => window.removeEventListener("currencyChange", handleCurrencyChange);
   }, []);
 
   const subtotal = cart.reduce((sum, item) => {

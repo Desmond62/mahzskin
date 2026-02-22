@@ -277,7 +277,7 @@ export function Header() {
                 <Link href="/" className="shrink-0">
                   <div className="text-center">
                     <Image src="/logo-removebg-preview.png"
-                    alt="F&W Logo"
+                    alt="Mahzskin Logo"
                     width={120}
                     height={120}
                     className="object-cover h-24 w-auto" />
@@ -347,7 +347,7 @@ export function Header() {
                 <Link href="/" className="shrink-0">
                   <div className="text-center">
                     <Image src="/logo-removebg-preview.png"
-                    alt="F&W Logo"
+                    alt="Mahzskin Logo"
                     width={120}
                     height={120}
                     className="object-cover h-24 w-auto" />

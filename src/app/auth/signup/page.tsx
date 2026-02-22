@@ -88,7 +88,7 @@ export default function SignupPage() {
 
     const { name, email, password } = formData;
     const existingUsers: StoredUser[] = JSON.parse(
-      localStorage.getItem("fw_users") || "[]"
+      localStorage.getItem("mahzskin_users") || "[]"
     );
 
     const userExists = existingUsers.some((user: StoredUser) => user.email === email);
@@ -111,8 +111,8 @@ export default function SignupPage() {
       email 
     };
     
-    localStorage.setItem("fw_users", JSON.stringify([...existingUsers, newStoredUser]));
-    localStorage.setItem("fw_user", JSON.stringify(newUser));
+    localStorage.setItem("mahzskin_users", JSON.stringify([...existingUsers, newStoredUser]));
+    localStorage.setItem("mahzskin_user", JSON.stringify(newUser));
     
     // Dispatch event to update UI
     window.dispatchEvent(new Event("userChanged"));

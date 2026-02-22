@@ -52,6 +52,18 @@ export function CartDrawer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
+  // Lock scroll when cart drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     const handleCurrencyChange = () => setCurrency(getCurrency());
     window.addEventListener("currencyChange", handleCurrencyChange);
@@ -110,7 +122,7 @@ export function CartDrawer() {
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-70 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/60 z-70 transition-opacity duration-300 ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}
         onClick={closeDrawer}
@@ -118,7 +130,7 @@ export function CartDrawer() {
 
       {/* Drawer */}
       <div
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-card z-70 shadow-2xl transition-transform duration-300 ease-in-out ${
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-card z-80 shadow-2xl transition-transform duration-300 ease-in-out ${
           isVisible ? "translate-x-0" : "translate-x-full"
         }`}
       >

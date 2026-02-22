@@ -8,8 +8,8 @@ const FALLBACK_RATES: Record<string, number> = {
 }
 
 // Cache key and duration (24 hours)
-const CACHE_KEY = 'fw_currency_rates';
-const CACHE_TIMESTAMP_KEY = 'fw_currency_rates_timestamp';
+const CACHE_KEY = 'mahzskin_currency_rates';
+const CACHE_TIMESTAMP_KEY = 'mahzskin_currency_rates_timestamp';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 // Dynamic rates (will be updated from API)
@@ -118,5 +118,5 @@ export function formatPrice(amount: number, currency: string): string {
 
 export function getCurrency(): string {
   if (typeof window === "undefined") return "NGN"
-  return localStorage.getItem("fw_currency") || "NGN"
+  return localStorage.getItem("mahzskin_currency") || "NGN"
 }

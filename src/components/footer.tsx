@@ -16,9 +16,9 @@ export function Footer() {
     e.preventDefault()
     if (email) {
       // Store subscription in localStorage
-      const subscriptions = JSON.parse(localStorage.getItem("fw_newsletter") || "[]")
+      const subscriptions = JSON.parse(localStorage.getItem("mahzskin_newsletter") || "[]")
       subscriptions.push({ email, date: new Date().toISOString() })
-      localStorage.setItem("fw_newsletter", JSON.stringify(subscriptions))
+      localStorage.setItem("mahzskin_newsletter", JSON.stringify(subscriptions))
       setSubscribed(true)
       setEmail("")
       setTimeout(() => setSubscribed(false), 3000)
@@ -62,13 +62,9 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5 shrink-0" />
-                <a href="mailto:info@fairandwhite.com" className="hover:text-primary">
+                <a href="mailto:mahzskinltd@gmail.com" className="hover:text-primary">
                   mahzskinltd@gmail.com
                 </a>
-              </li>
-              <li className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
-                <span>Kaduna 1, opp. Victory Plaza, Tradefair, Lagos</span>
               </li>
             </ul>
           </div>

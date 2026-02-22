@@ -2,16 +2,16 @@ import type { User } from "./types"
 
 export function getUser(): User | null {
   if (typeof window === "undefined") return null
-  const userStr = localStorage.getItem("fw_user")
+  const userStr = localStorage.getItem("mahzskin_user")
   return userStr ? JSON.parse(userStr) : null
 }
 
 export function saveUser(user: User): void {
-  localStorage.setItem("fw_user", JSON.stringify(user))
+  localStorage.setItem("mahzskin_user", JSON.stringify(user))
 }
 
 export function removeUser(): void {
-  localStorage.removeItem("fw_user")
+  localStorage.removeItem("mahzskin_user")
 }
 
 export function isAuthenticated(): boolean {
@@ -29,7 +29,7 @@ export function login(email: string, password: string): { success: boolean; erro
   }
 
   // Check if user exists in localStorage
-  const usersStr = localStorage.getItem("fw_users")
+  const usersStr = localStorage.getItem("mahzskin_users")
   const users: User[] = usersStr ? JSON.parse(usersStr) : []
 
   const user = users.find((u) => u.email === email)
@@ -57,7 +57,7 @@ export function signup(
   }
 
   // Check if user already exists
-  const usersStr = localStorage.getItem("fw_users")
+  const usersStr = localStorage.getItem("mahzskin_users")
   const users: User[] = usersStr ? JSON.parse(usersStr) : []
 
   if (users.find((u) => u.email === email)) {
@@ -72,7 +72,7 @@ export function signup(
   }
 
   users.push(newUser)
-  localStorage.setItem("fw_users", JSON.stringify(users))
+  localStorage.setItem("mahzskin_users", JSON.stringify(users))
   saveUser(newUser)
 
   return { success: true, user: newUser }

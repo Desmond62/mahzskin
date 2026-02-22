@@ -302,13 +302,13 @@ export function initializeProducts() {
   if (typeof window === "undefined") return
 
   // Force update products to match current SAMPLE_PRODUCTS
-  localStorage.setItem("fw_products", JSON.stringify(SAMPLE_PRODUCTS))
+  localStorage.setItem("mahzskin_products", JSON.stringify(SAMPLE_PRODUCTS))
 }
 
 export function getProducts(): Product[] {
   if (typeof window === "undefined") return SAMPLE_PRODUCTS
 
-  const stored = localStorage.getItem("fw_products")
+  const stored = localStorage.getItem("mahzskin_products")
   return stored ? JSON.parse(stored) : SAMPLE_PRODUCTS
 }
 

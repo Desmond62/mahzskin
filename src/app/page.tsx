@@ -76,7 +76,7 @@ export default function HomePage() {
               <div className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer h-full">
                 <Image
                   src="/girlie-cream.jpeg"
-                  alt="Fair & White Products"
+                  alt="Mahzskin Products"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   width={600}
                   height={600}

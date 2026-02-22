@@ -2,11 +2,11 @@ import type { CartItem, WishlistItem, Product } from "./types"
 import { showToast } from "@/components/toast"
 
 export const STORAGE_KEYS = {
-  CART: "fw_cart",
-  WISHLIST: "fw_wishlist",
-  PRODUCTS: "fw_products",
-  CURRENCY: "fw_currency",
-  USER: "fw_user",
+  CART: "mahzskin_cart",
+  WISHLIST: "mahzskin_wishlist",
+  PRODUCTS: "mahzskin_products",
+  CURRENCY: "mahzskin_currency",
+  USER: "mahzskin_user",
 }
 
 // Cart operations
