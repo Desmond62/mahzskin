@@ -23,7 +23,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const { addItem: addToCartSupabase } = useSupabaseCart();
+  const { addToCart: addToCartSupabase } = useSupabaseCart();
   const { wishlist, addToWishlist: addToWishlistSupabase, removeItem: removeFromWishlistSupabase } = useSupabaseWishlist();
 
   const productId = params.id as string;
