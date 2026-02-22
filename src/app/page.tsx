@@ -141,7 +141,7 @@ created to enhance your skin’s natural richness.
             <FadeInUp delay={100}>
               <div className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-pink-100 to-pink-50 cursor-pointer">
                 <Image
-                  src="/cream-cup.png"
+                  src="/shelf-image.jpeg"
                   alt="Range"
                   width={400}
                   height={500}
@@ -164,7 +164,7 @@ created to enhance your skin’s natural richness.
             <FadeInUp delay={200}>
               <div className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-blue-100 to-blue-50 cursor-pointer">
                 <Image
-                  src="/skincare2.png"
+                  src="/baby-face.jpeg"
                   alt="Care"
                   width={400}
                   height={500}
@@ -187,7 +187,7 @@ created to enhance your skin’s natural richness.
             <FadeInUp delay={300}>
               <div className="group relative aspect-4/5 rounded-2xl overflow-hidden bg-linear-to-br from-amber-100 to-amber-50 cursor-pointer">
                 <Image
-                  src="/face-serrum.avif"
+                  src="/care-cream.jpeg"
                   alt="Needs"
                   width={400}
                   height={500}

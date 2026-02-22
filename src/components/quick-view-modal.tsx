@@ -124,7 +124,7 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
     try {
       if (inWishlist && wishlistItem) {
         await removeItem(wishlistItem.wishlistItemId);
-        showToast(`"${product.name}" removed from wishlist`, "success");
+        showToast(`"${product.name}" removed from wishlist`, "info");
       } else {
         await addToWishlist(product.id);
         showToast(`"${product.name}" added to wishlist!`, "success");

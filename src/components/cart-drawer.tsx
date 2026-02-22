@@ -81,7 +81,7 @@ export function CartDrawer() {
   const handleRemoveItem = async (cartItemId: string) => {
     try {
       await removeItem(cartItemId);
-      showToast("Item removed from cart", "success");
+      showToast("Item removed from cart", "info");
     } catch (error) {
       console.error("Error removing item:", error);
       showToast("Failed to remove item", "error");

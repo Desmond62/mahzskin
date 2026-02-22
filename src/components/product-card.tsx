@@ -85,7 +85,7 @@ export function ProductCard({ product }: ProductCardProps) {
     try {
       if (inWishlist && wishlistItem) {
         await removeItem(wishlistItem.wishlistItemId);
-        showToast(`"${product.name}" removed from wishlist`, "success");
+        showToast(`"${product.name}" removed from wishlist`, "info");
       } else {
         await addToWishlist(product.id);
         showToast(`"${product.name}" added to wishlist!`, "success");
@@ -149,7 +149,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {/* Quick View button - always visible on mobile, hover on desktop */}
             <button
               onClick={handleQuickView}
-              className="absolute bottom-3 left-3 px-3 py-2 bg-card/90 rounded hover:bg-card transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10 flex items-center gap-1.5"
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 bg-card/90 rounded hover:bg-card transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100 z-10 flex items-center gap-1.5"
               aria-label="Quick view"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
