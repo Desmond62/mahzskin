@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { getCart, addToCart as addToCartDB, removeFromCart, updateCartItemQuantity } from "@/lib/supabase/database";
 import { useSupabaseAuth } from "./use-supabase-auth";
 import type { Product } from "@/lib/types";
@@ -14,14 +14,21 @@ export function useSupabaseCart() {
   const { user } = useSupabaseAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const loadingRef = useRef(false);
 
-  const loadCart = async () => {
+  const loadCart = useCallback(async () => {
+    // Prevent concurrent loads
+    if (loadingRef.current) {
+      return;
+    }
+
     if (!user) {
       setCart([]);
       setLoading(false);
       return;
     }
 
+    loadingRef.current = true;
     try {
       const data = await getCart(user.id);
       setCart(data);
@@ -29,8 +36,9 @@ export function useSupabaseCart() {
       console.error("Error loading cart:", error);
     } finally {
       setLoading(false);
+      loadingRef.current = false;
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     loadCart();
@@ -45,8 +53,7 @@ export function useSupabaseCart() {
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [loadCart]);
 
   const addToCart = async (productId: string, quantity: number = 1) => {
     if (!user) {

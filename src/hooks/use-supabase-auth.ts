@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
 export function useSupabaseAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  
+  // Memoize the client to prevent creating new instances on every render
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     // Get initial session
@@ -25,7 +27,7 @@ export function useSupabaseAuth() {
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+  }, [supabase]);
 
   return { user, loading, supabase };
 }

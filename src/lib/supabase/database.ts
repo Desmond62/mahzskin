@@ -45,27 +45,36 @@ export async function getProductById(id: string): Promise<Product | null> {
 // ============================================
 
 export async function getCart(userId: string) {
-  const supabase = createClient();
-  
-  const { data, error } = await supabase
-    .from('cart_items')
-    .select(`
-      *,
-      products (*)
-    `)
-    .eq('user_id', userId);
-
-  if (error) {
-    console.error('Error fetching cart:', error);
+  if (!userId) {
     return [];
   }
+  
+  const supabase = createClient();
+  
+  try {
+    const { data, error } = await supabase
+      .from('cart_items')
+      .select(`
+        *,
+        products (*)
+      `)
+      .eq('user_id', userId);
 
-  // Transform to match existing cart structure
-  return data.map(item => ({
-    ...item.products,
-    quantity: item.quantity,
-    cartItemId: item.id
-  }));
+    if (error) {
+      console.error('Error fetching cart:', error);
+      return [];
+    }
+
+    // Transform to match existing cart structure
+    return (data || []).map(item => ({
+      ...item.products,
+      quantity: item.quantity,
+      cartItemId: item.id
+    }));
+  } catch (err) {
+    console.error('Unexpected error fetching cart:', err);
+    return [];
+  }
 }
 
 export async function addToCart(userId: string, productId: string, quantity: number = 1) {
