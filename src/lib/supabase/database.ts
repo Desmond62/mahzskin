@@ -66,7 +66,7 @@ export async function getCart(userId: string) {
     }
 
     // Transform to match existing cart structure
-    return (data || []).map(item => ({
+    return (data || []).map((item: any) => ({
       ...item.products,
       quantity: item.quantity,
       cartItemId: item.id
@@ -185,7 +185,7 @@ export async function getWishlist(userId: string) {
   }
 
   // Transform to match existing wishlist structure
-  return data.map(item => ({
+  return data.map((item: any) => ({
     ...item.products,
     wishlistItemId: item.id
   }));
