@@ -91,12 +91,24 @@ export default function ProductPage() {
       return;
     }
 
+    // Check if user is online
+    if (!navigator.onLine) {
+      showToast("No internet connection. Try again when you're back online.", "error");
+      return;
+    }
+
     try {
       await addToCartSupabase(product.id, quantity);
       showToast(`${product.name} added to cart`, "success");
     } catch (error) {
       console.error("Error adding to cart:", error);
-      showToast("Failed to add to cart", "error");
+      
+      // Check if it's a network error
+      if (!navigator.onLine) {
+        showToast("No internet connection. Try again when you're back online.", "error");
+      } else {
+        showToast("Failed to add to cart", "error");
+      }
     }
   };
 
@@ -104,6 +116,12 @@ export default function ProductPage() {
     if (!user) {
       showToast("Please login to manage wishlist", "error");
       router.push("/auth/login");
+      return;
+    }
+
+    // Check if user is online
+    if (!navigator.onLine) {
+      showToast("No internet connection. Try again when you're back online.", "error");
       return;
     }
 
@@ -120,7 +138,13 @@ export default function ProductPage() {
       }
     } catch (error) {
       console.error("Error toggling wishlist:", error);
-      showToast("Failed to update wishlist", "error");
+      
+      // Check if it's a network error
+      if (!navigator.onLine) {
+        showToast("No internet connection. Try again when you're back online.", "error");
+      } else {
+        showToast("Failed to update wishlist", "error");
+      }
     }
   };
 
