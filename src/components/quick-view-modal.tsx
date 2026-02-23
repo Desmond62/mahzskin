@@ -70,6 +70,12 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
       window.location.href = "/auth/login";
       return;
     }
+
+    // Check if user is online
+    if (!navigator.onLine) {
+      showToast("No internet connection. Try again when you're back online.", "error");
+      return;
+    }
     
     setIsAddingToCart(true);
     try {
@@ -78,7 +84,13 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
       onClose();
     } catch (error) {
       console.error("Error adding to cart:", error);
-      showToast("Failed to add product to cart", "error");
+      
+      // Check if it's a network error
+      if (!navigator.onLine) {
+        showToast("No internet connection. Try again when you're back online.", "error");
+      } else {
+        showToast("Failed to add product to cart", "error");
+      }
     } finally {
       setIsAddingToCart(false);
     }
@@ -92,6 +104,12 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
       window.location.href = "/auth/login";
       return;
     }
+
+    // Check if user is online
+    if (!navigator.onLine) {
+      showToast("No internet connection. Try again when you're back online.", "error");
+      return;
+    }
     
     setIsBuying(true);
     try {
@@ -102,7 +120,13 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
       onClose();
     } catch (error) {
       console.error("Error buying now:", error);
-      showToast("Failed to add product to cart", "error");
+      
+      // Check if it's a network error
+      if (!navigator.onLine) {
+        showToast("No internet connection. Try again when you're back online.", "error");
+      } else {
+        showToast("Failed to add product to cart", "error");
+      }
     } finally {
       setIsBuying(false);
     }
@@ -114,6 +138,12 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
     
     if (!user) {
       window.location.href = "/auth/login";
+      return;
+    }
+
+    // Check if user is online
+    if (!navigator.onLine) {
+      showToast("No internet connection. Try again when you're back online.", "error");
       return;
     }
     
@@ -131,7 +161,13 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
       }
     } catch (error) {
       console.error("Error toggling wishlist:", error);
-      showToast("Failed to update wishlist", "error");
+      
+      // Check if it's a network error
+      if (!navigator.onLine) {
+        showToast("No internet connection. Try again when you're back online.", "error");
+      } else {
+        showToast("Failed to update wishlist", "error");
+      }
     }
   };
 

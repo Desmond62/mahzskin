@@ -56,6 +56,12 @@ export function ProductCard({ product }: ProductCardProps) {
       window.location.href = "/auth/login";
       return;
     }
+
+    // Check if user is online
+    if (!navigator.onLine) {
+      showToast("No internet connection. Try again when you're back online.", "error");
+      return;
+    }
     
     setIsAddingToCart(true);
     try {
@@ -63,7 +69,13 @@ export function ProductCard({ product }: ProductCardProps) {
       showToast(`"${product.name}" added to cart!`, "success");
     } catch (error) {
       console.error("Error adding to cart:", error);
-      showToast("Failed to add product to cart", "error");
+      
+      // Check if it's a network error
+      if (!navigator.onLine) {
+        showToast("No internet connection. Try again when you're back online.", "error");
+      } else {
+        showToast("Failed to add product to cart", "error");
+      }
     } finally {
       setIsAddingToCart(false);
     }
@@ -75,6 +87,12 @@ export function ProductCard({ product }: ProductCardProps) {
     
     if (!user) {
       window.location.href = "/auth/login";
+      return;
+    }
+
+    // Check if user is online
+    if (!navigator.onLine) {
+      showToast("No internet connection. Try again when you're back online.", "error");
       return;
     }
     
@@ -92,7 +110,13 @@ export function ProductCard({ product }: ProductCardProps) {
       }
     } catch (error) {
       console.error("Error toggling wishlist:", error);
-      showToast("Failed to update wishlist", "error");
+      
+      // Check if it's a network error
+      if (!navigator.onLine) {
+        showToast("No internet connection. Try again when you're back online.", "error");
+      } else {
+        showToast("Failed to update wishlist", "error");
+      }
     }
   };
 
