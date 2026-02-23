@@ -17,8 +17,6 @@ export function createClient() {
         autoRefreshToken: true,
         detectSessionInUrl: true,
         flowType: 'pkce',
-        // Increase lock timeout to prevent race conditions
-        lockTimeout: 30000, // 30 seconds instead of default 10
       },
     }
   )
