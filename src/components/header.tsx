@@ -92,25 +92,6 @@ export function Header() {
   }, [searchOpen]);
 
   useEffect(() => {
-    const updateCounts = () => {
-      const cart = getCart();
-      const wishlist = getWishlist();
-      setCartCount(cart.reduce((sum, item) => sum + item.quantity, 0));
-      setWishlistCount(wishlist.length);
-    };
-
-    updateCounts();
-
-    window.addEventListener("cartUpdated", updateCounts);
-    window.addEventListener("wishlistUpdated", updateCounts);
-
-    return () => {
-      window.removeEventListener("cartUpdated", updateCounts);
-      window.removeEventListener("wishlistUpdated", updateCounts);
-    };
-  }, [setCartCount, setWishlistCount]);
-
-  useEffect(() => {
     let lastScrollY = 0;
 
     const handleScroll = () => {

@@ -457,10 +457,10 @@ function ProductsContent() {
             <div
               className={`grid gap-3 sm:gap-4 lg:gap-6 mb-8 ${
                 viewMode === "one"
-                  ? "grid-cols-1"
+                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                   : viewMode === "two"
                   ? "grid-cols-2"
-                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
               }`}
             >
               {displayedProducts.length === 0 ? (

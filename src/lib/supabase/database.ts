@@ -169,26 +169,35 @@ export async function clearCart(userId: string) {
 // ============================================
 
 export async function getWishlist(userId: string) {
-  const supabase = createClient();
-  
-  const { data, error } = await supabase
-    .from('wishlist')
-    .select(`
-      *,
-      products (*)
-    `)
-    .eq('user_id', userId);
-
-  if (error) {
-    console.error('Error fetching wishlist:', error);
+  if (!userId) {
     return [];
   }
+  
+  const supabase = createClient();
+  
+  try {
+    const { data, error } = await supabase
+      .from('wishlist')
+      .select(`
+        *,
+        products (*)
+      `)
+      .eq('user_id', userId);
 
-  // Transform to match existing wishlist structure
-  return data.map((item: any) => ({
-    ...item.products,
-    wishlistItemId: item.id
-  }));
+    if (error) {
+      console.error('Error fetching wishlist:', error);
+      return [];
+    }
+
+    // Transform to match existing wishlist structure
+    return (data || []).map((item: any) => ({
+      ...item.products,
+      wishlistItemId: item.id
+    }));
+  } catch (err) {
+    console.error('Unexpected error fetching wishlist:', err);
+    return [];
+  }
 }
 
 export async function addToWishlist(userId: string, productId: string) {

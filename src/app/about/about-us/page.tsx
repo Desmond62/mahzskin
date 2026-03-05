@@ -38,16 +38,9 @@ export default function AboutUsPage() {
                     ABOUT MAHZ SKIN
                   </h2>
                   <p className="text-gray-600 mb-6 leading-relaxed">
-                                    In Persian, “محض” (MAHZ) means purely — a word used to express purity, intention, and absoluteness.
-That meaning defines everything we create.
-MAHZ SKIN exists without compromise.
-We believe skincare should enhance your skin’s natural richness, never strip it away or force it to change.
-Your skin does not need aggression to improve — it needs balance, respect, and intelligent care.
-Born from science and rooted in inclusivity, MAHZ SKIN is dedicated to creating results-driven, skin-respectful formulations that work in harmony with every complexion — with special attention to melanin-rich skin.
-We blend clinically proven actives with pure botanicals, ensuring every formula is effective, gentle, and thoughtfully designed for all skin types.
-No unnecessary harshness.
-No empty promises.
-Just skincare that works — purely.
+                      In Persian, ‘محض’ (MAHZ) means <i><b>PURELY</b></i>; word that expresses intention, clarity, and pureness. That meaning drives all we produce.MAHZ SKIN is without compromise. We believe that skincare should enhance your skin’s natural richness rather than stripping, suppressing, or forcing it into something it was never intended to be. To transform your skin, you need balance, dignity, and sensible formulation, not aggression. 
+
+MAHZ SKIN develops results-driven formulations that perform well with every complexion, with a focus on melanin-rich skin.We combine scientifically proven actives with carefully selected botanicals to produce visible effects without undue harshness. There are no shortcuts. No false claims. Simply effective, skin-friendly skincare.
                   </p>
                   <button className="bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors">
                     EXPLORE
@@ -69,7 +62,7 @@ Just skincare that works — purely.
                 <div className="lg:order-2">
                   <div className="relative aspect-4/5 rounded-lg overflow-hidden group cursor-pointer">
                     <Image
-                      src="/face-serrum.avif"
+                      src="/our-vision.jpg"
                       alt="malzskin face serrum Product"
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
@@ -81,21 +74,10 @@ Just skincare that works — purely.
                 {/* Left: Content - Second on mobile */}
                 <div className="lg:order-1 text-center lg:text-left">
                   <h2 className="text-3xl lg:text-4xl font-bold mb-6 font-playfair">
-                    OUR PHILOSOPHY
+                    OUR VISION 
                   </h2>
                   <p className="text-gray-600 mb-6 leading-relaxed">
-                               Skincare, Reimagined
-At MAHZ SKIN, we don’t chase trends.
-We study skin.
-Our approach is guided by science, skin biology, and real-world results. Every ingredient serves a purpose. Every formula respects the skin barrier.
-We believe: <br />
-●Healthy skin comes before “perfect” skin <br />
-
-●Gentle formulas can still deliver powerful results <br />
-
-●Melanin-rich skin deserves specialized, informed care
-
-Skincare should feel intelligent, intentional, and honest
+ To reinvent results-driven skincare by setting a new worldwide standard for intelligent, melanin-conscious formulas, where noticeable transformation meets uncompromising skin dignity and every complexion is refined, elevated, and empowered to glow purely.
                   </p>
                   <button className="bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors">
                     EXPLORE
@@ -129,18 +111,13 @@ Skincare should feel intelligent, intentional, and honest
                 {/* Right: Content - Second on mobile */}
                 <div className="lg:order-2 text-center lg:text-left">
                   <h2 className="text-3xl lg:text-4xl font-bold mb-6 font-playfair">
-                    OUR PILLARS 
+                     BRAND STORY
                   </h2>
                   <p className="text-gray-600 mb-6 leading-relaxed">
-                                      Our Pillars <br />
-1. Results-Driven
-Visible improvements you can trust — backed by proven actives and thoughtful formulation. <br />
-2. Skin-Respectful
-Barrier-friendly, non-stripping care designed to support long-term skin health. <br />
-3. Inclusive Beauty
-Formulated in the USA for MAHZ SKIN Ltd, MAHZ SKIN celebrates every shade and every story — creating space where melanin-rich skin is seen, understood, and prioritized. <br />
-4. Intelligent Ingredients
-Clinically supported actives, blended with purposeful botanicals — science-led, never excessive.
+                                     
+Mahz Skin was founded on a simple yet powerful belief: you deserve visibly clear, glowing skin without compromise. In a market crowded with harsh lightening creams and false claims, we choose a different approach: science-backed formulations that are effective, intentional, and kind on your skin. Every product is designed with high-performance actives, balanced quality, and an in depth understanding of genuine skin challenges such as dark spots, sunburn, uneven tone, compromised skin-barrier, and dullness; particularly for melanin-rich skin that requires expert care rather than shortcuts. 
+
+Trends are not our focus here. We are here to help with transformation. Mahz Skin represents confidence, clarity, and quiet luxury. Visible results, trusted formulas, and a glow that looks like you but is upgraded. This is skincare for women who seek more radiance, refinement, and power in their routine. Your skin is not a flaw to be fixed; it is a standard to be improved.
                   </p>
                   <button className="bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-colors">
                     EXPLORE

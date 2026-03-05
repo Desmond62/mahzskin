@@ -101,7 +101,7 @@ export default function HomePage() {
                 Premium Skincare Collection
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight">
-                MAHZ SKIN _ FOR OUR SKIN 
+                MAHZ SKIN - FOR OUR SKIN 
                 {/* <br />
                 <span className="text-primary">Ranges</span> */}
               </h1>
@@ -251,11 +251,11 @@ created to enhance your skin’s natural richness.
             <FadeInRight className="relative h-full lg:order-2">
               <div className="relative aspect-4/4 rounded-2xl overflow-hidden group cursor-pointer h-full shadow-2xl">
                 <Image
-                  src="/cream-girl.jpeg"
+                  src="/face-cream.jpeg"
                   alt="Skincare for Queens"
                   width={800}
                   height={600}
-                  className="w-full h-full object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-500 brightness-105 contrast-110"
+                  className="w-full h-full object-cover object-[center_50%] group-hover:scale-105 transition-transform duration-500 brightness-105 contrast-110"
                   priority
                 />
               </div>
@@ -267,9 +267,7 @@ created to enhance your skin’s natural richness.
                 QUEENS
               </h2>
               <p className="text-lg opacity-90 max-w-md">
-                Luxurious care enriched with powerful actives to nourish,
-                smooth, and reveal youthful, radiant skin in a complete 3-step
-                ritual.
+               Advanced skincare, reserved for women who wear their glow like a crown. For women who carry radiance like royalty.
               </p>
               <Button size="lg" variant="secondary" className="">
                 Learn More
