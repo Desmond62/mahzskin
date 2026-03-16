@@ -483,7 +483,7 @@ export function Header() {
 
             {/* User Info Section */}
             <div className="border-b border-border">
-              <UserMenu isMobile={true} onNavigate={() => setMobileMenuOpen(false)} showLogout={false} />
+              <UserMenu isMobile={true} onNavigate={() => setMobileMenuOpen(false)} />
             </div>
 
             {/* Currency Selector */}

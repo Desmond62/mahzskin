@@ -50,6 +50,12 @@ export default function SignupPage() {
   const [userDisplayName, setUserDisplayName] = useState("");
   const router = useRouter();
 
+  // Clear old localStorage data on component mount
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('mahzskin_users');
+    localStorage.removeItem('mahzskin_user');
+  }
+
   // Helper function to get display name from full name
   const getDisplayName = (fullName: string): string => {
     const firstName = fullName.trim().split(' ')[0];
@@ -67,8 +73,8 @@ export default function SignupPage() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  // 3️⃣ Handle submit with validation + localStorage
-  const handleSubmit = (e: React.FormEvent) => {
+  // 3️⃣ Handle submit with validation + Supabase
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrors({});
@@ -87,46 +93,46 @@ export default function SignupPage() {
     }
 
     const { name, email, password } = formData;
-    const existingUsers: StoredUser[] = JSON.parse(
-      localStorage.getItem("mahzskin_users") || "[]"
-    );
 
-    const userExists = existingUsers.some((user: StoredUser) => user.email === email);
-    if (userExists) {
-      setErrors({ email: "Email already registered" });
+    try {
+      // Import signUpWithEmail from auth
+      const { signUpWithEmail } = await import("@/lib/supabase/auth");
+      
+      // Sign up with Supabase
+      const data = await signUpWithEmail(email, password, name);
+      
+      if (data.user) {
+        // Set display name and show success message
+        const displayName = getDisplayName(name);
+        setUserDisplayName(displayName);
+        setShowSuccess(true);
+
+        // Dispatch event to update UI
+        window.dispatchEvent(new Event("userChanged"));
+
+        // Navigate to home after showing success message
+        setTimeout(() => {
+          router.push("/");
+        }, 3000);
+      }
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      
+      // Handle specific error messages with user-friendly text
+      if (error.message?.includes("Failed to fetch") || error.message?.includes("NetworkError") || error.message?.includes("network")) {
+        setErrors({ general: "No internet connection. Please check your network and try again." });
+      } else if (error.message?.includes("already registered")) {
+        setErrors({ email: "Email already registered" });
+      } else if (error.message?.includes("Invalid email")) {
+        setErrors({ email: "Invalid email address" });
+      } else if (error.message?.includes("Password")) {
+        setErrors({ password: error.message });
+      } else {
+        setErrors({ general: error.message || "Signup failed. Please try again." });
+      }
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    const userId = Date.now().toString();
-    const newStoredUser = { 
-      id: userId,
-      name, 
-      email,
-      password // Store password for login verification
-    };
-    const newUser: User = { 
-      id: userId,
-      name, 
-      email 
-    };
-    
-    localStorage.setItem("mahzskin_users", JSON.stringify([...existingUsers, newStoredUser]));
-    localStorage.setItem("mahzskin_user", JSON.stringify(newUser));
-    
-    // Dispatch event to update UI
-    window.dispatchEvent(new Event("userChanged"));
-
-    // Set display name and show success message
-    const displayName = getDisplayName(name);
-    setUserDisplayName(displayName);
-    setShowSuccess(true);
-    setIsLoading(false);
-
-    // Navigate to home after showing success message
-    setTimeout(() => {
-      router.push("/");
-    }, 3000); // Show success message for 3 seconds
   };
 
   return (

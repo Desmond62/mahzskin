@@ -1,24 +1,40 @@
 "use client"
 
-import { useState } from "react"
-import { User, LogOut } from "lucide-react"
+import { useState, useEffect } from "react"
+import { User, LogOut, Shield } from "lucide-react"
 import { signOut } from "@/lib/supabase/auth"
 import { useSupabaseAuth } from "@/hooks/use-supabase-auth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { checkIsAdmin } from "@/lib/supabase/admin"
 
 interface UserMenuProps {
   isMobile?: boolean;
   onNavigate?: () => void;
-  showLogout?: boolean;
   showOnlyLogout?: boolean;
 }
 
-export function UserMenu({ isMobile = false, onNavigate, showLogout = true, showOnlyLogout = false }: UserMenuProps) {
+export function UserMenu({ isMobile = false, onNavigate, showOnlyLogout = false }: UserMenuProps) {
   const router = useRouter()
   const { user, loading } = useSupabaseAuth()
   const [isOpen, setIsOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  // Check if user is admin
+  useEffect(() => {
+    const ADMIN_EMAILS = ['mahzskinltd@gmail.com', 'desmondsolomon623@gmail.com']
+    if (!user) {
+      setIsAdmin(false)
+      return
+    }
+    if (ADMIN_EMAILS.includes(user.email || '')) {
+      setIsAdmin(true)
+      return
+    }
+    checkIsAdmin().then(setIsAdmin)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id])
 
   const handleLogout = async () => {
     try {
@@ -112,66 +128,77 @@ export function UserMenu({ isMobile = false, onNavigate, showLogout = true, show
     )
   }
 
-  // Desktop: Dropdown menu
+  // Desktop: Dropdown menu with hover
   const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'
   const userAvatar = user.user_metadata?.avatar_url
 
   return (
-    <div className="relative">
+    <div 
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="hover:text-primary transition-colors flex items-center justify-center"
+        className="hover:opacity-80 transition-opacity flex items-center justify-center h-[40px] w-[40px] rounded-full overflow-hidden border-2 border-gray-200"
         aria-label="User menu"
       >
         {userAvatar ? (
           <Image 
             src={userAvatar} 
             alt={userName}
-            width={56}
-            height={56}
-            className="rounded-full ring-2 ring-primary/20 hover:ring-primary/40 transition-all object-cover"
-            style={{ width: '35px', height: '35px', minWidth: '35px', minHeight: '35px' }}
+            width={40}
+            height={40}
+            className="rounded-full object-cover w-full h-full"
             priority
           />
         ) : (
-          <User className="h-14 w-14" style={{ width: '56px', height: '56px' }} />
+          <User className="h-5 w-5" />
         )}
       </button>
 
       {isOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
-            <div className="px-4 py-3 border-b border-border">
-              <div className="flex items-center gap-3 mb-2">
-                {userAvatar ? (
-                  <Image 
-                    src={userAvatar} 
-                    alt={userName}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                ) : (
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <User className="h-5 w-5 text-primary" />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{userName}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+        <div className="absolute right-0 top-full mt-1 w-56 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-border">
+            <div className="flex items-center gap-3 mb-2">
+              {userAvatar ? (
+                <Image 
+                  src={userAvatar} 
+                  alt={userName}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <User className="h-5 w-5 text-primary" />
                 </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{userName}</p>
+                <p className="text-xs text-muted-foreground truncate">{user.email}</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="w-full px-4 py-3 text-left text-sm hover:bg-accent transition-colors flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </button>
           </div>
-        </>
+          
+          {/* Admin link - only show for admin users */}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="w-full px-4 py-3 text-left text-sm hover:bg-accent transition-colors flex items-center gap-2 border-b border-border"
+            >
+              <Shield className="h-4 w-4 text-blue-600" />
+              <span className="text-blue-600 font-medium">Admin Dashboard</span>
+            </Link>
+          )}
+          
+          <button
+            onClick={handleLogout}
+            className="w-full px-4 py-3 text-left text-sm hover:bg-accent transition-colors flex items-center gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
+        </div>
       )}
     </div>
   )

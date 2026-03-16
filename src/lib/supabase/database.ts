@@ -7,6 +7,24 @@ import type { Product } from "../types";
 // PRODUCTS
 // ============================================
 
+// Map raw Supabase product row to the Product type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapProduct(row: any): Product {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description || '',
+    price: row.price,
+    currency: 'NGN',
+    image: row.image_url || row.image || '',
+    category: row.category_id || row.category || '',
+    inStock: row.stock == null ? true : row.stock > 0,
+    featured: row.is_featured ?? row.featured ?? false,
+    sales: row.sales ?? 0,
+    createdAt: row.created_at || row.createdAt || new Date().toISOString(),
+  };
+}
+
 export async function getProducts(): Promise<Product[]> {
   const supabase = createClient();
   
@@ -20,7 +38,7 @@ export async function getProducts(): Promise<Product[]> {
     return [];
   }
 
-  return data || [];
+  return (data || []).map(mapProduct);
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
@@ -37,7 +55,7 @@ export async function getProductById(id: string): Promise<Product | null> {
     return null;
   }
 
-  return data;
+  return data ? mapProduct(data) : null;
 }
 
 // ============================================

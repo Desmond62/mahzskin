@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
-import { useProducts } from "@/hooks/use-products";
+import { useSupabaseProducts } from "@/hooks/use-supabase-products";
 import { ProductGridSkeleton } from "@/components/ui/skeleton";
 import { OfflineMessage } from "@/components/offline-message";
 
@@ -25,7 +25,10 @@ type SortOption =
 function ProductsContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
-  const { products, loading, error, retry } = useProducts();
+  const { products, loading, error } = useSupabaseProducts();
+
+  // retry is not needed with supabase hook — just reload
+  const retry = () => window.location.reload();
 
   const [viewMode, setViewMode] = useState<ViewMode>("three");
   const [itemsPerPage, setItemsPerPage] = useState(10);

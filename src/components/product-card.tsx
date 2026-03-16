@@ -17,9 +17,10 @@ import { showToast } from "./toast";
 
 interface ProductCardProps {
   product: Product;
+  showNewBadge?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, showNewBadge = false }: ProductCardProps) {
   const [currency, setCurrency] = useState(getCurrency());
   const [showQuickView, setShowQuickView] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -145,9 +146,49 @@ export function ProductCard({ product }: ProductCardProps) {
               src={product.image || "/placeholder.svg"}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className={`object-cover group-hover:scale-105 transition-transform duration-300 ${!product.inStock ? "blur-sm scale-105" : ""}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
+
+            {/* New badge */}
+            {showNewBadge && (
+              <span className="absolute top-3 left-3 z-10 bg-black text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded">
+                New
+              </span>
+            )}
+
+            {/* Out of stock overlay */}
+            {!product.inStock && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/20">
+                {/* COMING text in center */}
+                <p className="text-white font-bold text-xl sm:text-2xl italic tracking-wide drop-shadow-lg" style={{ fontFamily: 'serif' }}>
+                  COMING
+                </p>
+                {/* Spinner + LOADING pinned to bottom */}
+                <div className="absolute bottom-4 flex flex-col items-center gap-1">
+                  <div className="relative flex items-center justify-center">
+                    <svg className="h-14 w-14" viewBox="0 0 40 40" fill="none">
+                      {[0,45,90,135,180,225,270,315].map((angle, i) => (
+                        <line
+                          key={angle}
+                          x1="20" y1="4" x2="20" y2="9"
+                          stroke="white"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          className={`seg-${i}`}
+                          transform={`rotate(${angle} 20 20)`}
+                        />
+                      ))}
+                    </svg>
+                    <div className="absolute flex flex-col items-center leading-none">
+                      <span className="text-white text-[9px] font-bold">42%</span>
+                      <span className="text-white/60 text-[6px] uppercase tracking-wide">loading</span>
+                    </div>
+                  </div>
+                  <p className="text-white text-[8px] font-semibold uppercase tracking-widest">LOADING...</p>
+                </div>
+              </div>
+            )}
             
             {/* Wishlist button - always visible on mobile, hover on desktop */}
             <button
@@ -194,10 +235,12 @@ export function ProductCard({ product }: ProductCardProps) {
             <Button 
               onClick={handleAddToCart} 
               className="w-full text-xs sm:text-sm py-2 sm:py-3"
-              disabled={isAddingToCart}
+              disabled={isAddingToCart || !product.inStock}
               variant="outline"
             >
-              {isAddingToCart ? (
+              {!product.inStock ? (
+                <span className="text-muted-foreground">Out of Stock</span>
+              ) : isAddingToCart ? (
                 <>
                   <Loader className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   <span className="hidden sm:inline">Adding...</span>

@@ -219,3 +219,31 @@
 .z-9999 {
   z-index: 9999;
 }
+
+/* Out-of-stock loading arc spinner */
+@keyframes arc-spin {
+  0%   { stroke-dashoffset: 100; }
+  50%  { stroke-dashoffset: 10; }
+  100% { stroke-dashoffset: 100; }
+}
+
+.loading-arc {
+  animation: arc-spin 1.6s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Segmented spinner — each dash fades in sequence */
+@keyframes seg-fade {
+  0%, 100% { opacity: 0.15; }
+  50%       { opacity: 1; }
+}
+
+.seg-0 { animation: seg-fade 1s linear infinite; animation-delay: 0s; }
+.seg-1 { animation: seg-fade 1s linear infinite; animation-delay: -0.875s; }
+.seg-2 { animation: seg-fade 1s linear infinite; animation-delay: -0.75s; }
+.seg-3 { animation: seg-fade 1s linear infinite; animation-delay: -0.625s; }
+.seg-4 { animation: seg-fade 1s linear infinite; animation-delay: -0.5s; }
+.seg-5 { animation: seg-fade 1s linear infinite; animation-delay: -0.375s; }
+.seg-6 { animation: seg-fade 1s linear infinite; animation-delay: -0.25s; }
+.seg-7 { animation: seg-fade 1s linear infinite; animation-delay: -0.125s; }

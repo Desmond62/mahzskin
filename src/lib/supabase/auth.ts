@@ -59,6 +59,22 @@ export async function signUpWithEmail(email: string, password: string, fullName:
     throw error;
   }
 
+  // Create user profile if signup was successful
+  if (data.user) {
+    const { error: profileError } = await supabase
+      .from('user_profiles')
+      .insert({
+        id: data.user.id,
+        full_name: fullName,
+        is_admin: false,
+      });
+
+    if (profileError) {
+      console.error('Error creating user profile:', profileError);
+      // Don't throw error here - user is created, profile can be created later
+    }
+  }
+
   return data;
 }
 

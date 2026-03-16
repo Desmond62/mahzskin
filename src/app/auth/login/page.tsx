@@ -25,6 +25,12 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
+  // Clear old localStorage data on component mount
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('mahzskin_users');
+    localStorage.removeItem('mahzskin_user');
+  }
+
   // 2️⃣ Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -80,8 +86,10 @@ export default function LoginPage() {
     } catch (error: any) {
       console.error("Login error:", error);
       
-      // Handle specific error messages
-      if (error.message?.includes("Invalid login credentials")) {
+      // Handle specific error messages with user-friendly text
+      if (error.message?.includes("Failed to fetch") || error.message?.includes("NetworkError") || error.message?.includes("network")) {
+        setErrors({ general: "No internet connection. Please check your network and try again." });
+      } else if (error.message?.includes("Invalid login credentials")) {
         setErrors({ general: "Invalid email or password" });
       } else if (error.message?.includes("Email not confirmed")) {
         setErrors({ general: "Please verify your email before signing in" });

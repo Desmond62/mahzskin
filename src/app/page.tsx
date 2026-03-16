@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useProducts } from "@/hooks/use-products";
+import { useSupabaseProducts } from "@/hooks/use-supabase-products";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { ProductGridSkeleton } from "@/components/ui/skeleton";
@@ -16,14 +16,32 @@ import Image from "next/image";
 import WhatsAppWidget from "@/components/whatsApp-widget";
 
 export default function HomePage() {
-  const { products, loading } = useProducts();
+  const { products, loading } = useSupabaseProducts();
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
 
-  const featuredProducts = products.slice(0, 4);
-  const newArrivals = products.slice(4, 8);
-  const bestSellers = products.slice(0, 4);
+  // New Arrivals: most recently added (sorted by createdAt desc)
+  const newArrivals = [...products]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 4);
+
+  // Mahz-Skin Picks: featured products, fallback to newest if not enough
+  const featuredProducts = (() => {
+    const featured = products.filter((p) => p.featured);
+    if (featured.length >= 4) return featured.slice(0, 4);
+    const featuredIds = new Set(featured.map((p) => p.id));
+    const extras = [...products]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .filter((p) => !featuredIds.has(p.id))
+      .slice(0, 4 - featured.length);
+    return [...featured, ...extras];
+  })();
+
+  // Best Sellers: products with highest sales count
+  const bestSellers = [...products]
+    .sort((a, b) => (b.sales ?? 0) - (a.sales ?? 0))
+    .slice(0, 4);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -230,14 +248,17 @@ created to enhance your skin’s natural richness.
             {loading ? (
               <ProductGridSkeleton count={4} />
             ) : (
-              newArrivals.map((product, index) => (
-                <div
-                  key={product.id}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))
+              newArrivals.map((product, index) => {
+                const isNew = (Date.now() - new Date(product.createdAt).getTime()) < 7 * 24 * 60 * 60 * 1000;
+                return (
+                  <div
+                    key={product.id}
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <ProductCard product={product} showNewBadge={isNew} />
+                  </div>
+                );
+              })
             )}
           </FadeInUp>
         </div>

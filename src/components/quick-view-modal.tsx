@@ -206,10 +206,42 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
           <div className="relative bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="grid md:grid-cols-2 gap-0">
               {/* Product Image with Zoom */}
-              <ImageZoom
-                src={product.image || "/placeholder.svg"}
-                alt={product.name}
-              />
+              <div className="relative">
+                <ImageZoom
+                  src={product.image || "/placeholder.svg"}
+                  alt={product.name}
+                />
+                {/* Out of stock overlay on quick view image */}
+                {!product.inStock && (
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/20 pointer-events-none">
+                    <p className="text-white font-bold text-2xl italic tracking-wide drop-shadow-lg" style={{ fontFamily: 'serif' }}>
+                      COMING
+                    </p>
+                    <div className="absolute bottom-6 flex flex-col items-center gap-1">
+                      <div className="relative flex items-center justify-center">
+                        <svg className="h-12 w-12" viewBox="0 0 40 40" fill="none">
+                          {[0,45,90,135,180,225,270,315].map((angle, i) => (
+                            <line
+                              key={angle}
+                              x1="20" y1="4" x2="20" y2="9"
+                              stroke="white"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              className={`seg-${i}`}
+                              transform={`rotate(${angle} 20 20)`}
+                            />
+                          ))}
+                        </svg>
+                        <div className="absolute flex flex-col items-center leading-none">
+                          <span className="text-white text-xs font-bold">42%</span>
+                          <span className="text-white/60 text-[7px] uppercase tracking-wide">loading</span>
+                        </div>
+                      </div>
+                      <p className="text-white text-[9px] font-semibold uppercase tracking-widest">LOADING...</p>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Product Details */}
               <div className="p-6 flex flex-col">
@@ -255,11 +287,11 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
                   <div className="flex items-center gap-2">
                     <button
                       onClick={handleAddToCart}
-                      disabled={isAddingToCart || isBuying}
+                      disabled={isAddingToCart || isBuying || !product.inStock}
                       className="flex-1 bg-black text-white py-3 px-6 rounded hover:bg-gray-800 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {isAddingToCart && <Loader className="h-5 w-5" />}
-                      {isAddingToCart ? "ADDING..." : "ADD TO CART"}
+                      {!product.inStock ? "OUT OF STOCK" : isAddingToCart ? "ADDING..." : "ADD TO CART"}
                     </button>
                     
                     <button
