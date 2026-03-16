@@ -105,7 +105,7 @@ export function UserMenu({ isMobile = false, onNavigate, showOnlyLogout = false 
     
     return (
       <div className="px-6 py-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-3">
           {userAvatar ? (
             <Image 
               src={userAvatar} 
@@ -124,6 +124,17 @@ export function UserMenu({ isMobile = false, onNavigate, showOnlyLogout = false 
             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
           </div>
         </div>
+        {/* Admin link on mobile */}
+        {isAdmin && (
+          <Link
+            href="/admin"
+            onClick={onNavigate}
+            className="flex items-center gap-2 px-2 py-2 text-sm text-blue-600 font-medium hover:bg-accent rounded transition-colors"
+          >
+            <Shield className="h-4 w-4" />
+            Admin Dashboard
+          </Link>
+        )}
       </div>
     )
   }
