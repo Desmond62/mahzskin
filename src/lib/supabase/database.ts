@@ -84,8 +84,9 @@ export async function getCart(userId: string) {
     }
 
     // Transform to match existing cart structure
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (data || []).map((item: any) => ({
-      ...item.products,
+      ...mapProduct(item.products),
       quantity: item.quantity,
       cartItemId: item.id
     }));
@@ -208,8 +209,9 @@ export async function getWishlist(userId: string) {
     }
 
     // Transform to match existing wishlist structure
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (data || []).map((item: any) => ({
-      ...item.products,
+      ...mapProduct(item.products),
       wishlistItemId: item.id
     }));
   } catch (err) {

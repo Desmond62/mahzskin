@@ -18,9 +18,10 @@ import { showToast } from "./toast";
 interface ProductCardProps {
   product: Product;
   showNewBadge?: boolean;
+  hideOutOfStockOverlay?: boolean;
 }
 
-export function ProductCard({ product, showNewBadge = false }: ProductCardProps) {
+export function ProductCard({ product, showNewBadge = false, hideOutOfStockOverlay = false }: ProductCardProps) {
   const [currency, setCurrency] = useState(getCurrency());
   const [showQuickView, setShowQuickView] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -158,7 +159,7 @@ export function ProductCard({ product, showNewBadge = false }: ProductCardProps)
             )}
 
             {/* Out of stock overlay */}
-            {!product.inStock && (
+            {!product.inStock && !hideOutOfStockOverlay && (
               <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/20">
                 {/* COMING text in center */}
                 <p className="text-white font-bold text-xl sm:text-2xl italic tracking-wide drop-shadow-lg" style={{ fontFamily: 'serif' }}>
