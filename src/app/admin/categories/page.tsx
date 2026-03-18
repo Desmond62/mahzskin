@@ -88,14 +88,14 @@ export default function CategoriesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Categories</h1>
+      <div className="flex items-center justify-between mb-8 mt-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Categories</h1>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm sm:text-base"
         >
-          <Plus className="h-5 w-5" />
-          Add Category
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span>Add Category</span>
         </button>
       </div>
 
@@ -167,8 +167,37 @@ export default function CategoriesPage() {
         </div>
       )}
 
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      {/* Mobile: Card list */}
+      <div className="sm:hidden space-y-3">
+        {categories.length === 0 ? (
+          <p className="text-center text-gray-500 py-12">No categories yet. Add your first category.</p>
+        ) : (
+          categories.map(cat => (
+            <div key={cat.id} className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900">{cat.name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{cat.slug}</p>
+                  {cat.description && (
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">{cat.description}</p>
+                  )}
+                </div>
+                <div className="flex gap-1 shrink-0">
+                  <button onClick={() => openEdit(cat)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                    <Edit className="h-4 w-4" />
+                  </button>
+                  <button onClick={() => handleDelete(cat.id, cat.name)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop: Table */}
+      <div className="hidden sm:block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
@@ -188,9 +217,11 @@ export default function CategoriesPage() {
             ) : (
               categories.map(cat => (
                 <tr key={cat.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-900">{cat.name}</td>
-                  <td className="px-6 py-4 text-gray-500 text-sm">{cat.slug}</td>
-                  <td className="px-6 py-4 text-gray-700">{cat.description || '-'}</td>
+                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{cat.name}</td>
+                  <td className="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">{cat.slug}</td>
+                  <td className="px-6 py-4 text-gray-700 max-w-xs">
+                    <p className="line-clamp-2">{cat.description || '-'}</p>
+                  </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button onClick={() => openEdit(cat)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
