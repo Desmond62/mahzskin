@@ -73,7 +73,7 @@ const WhatsAppWidget: React.FC = () => {
   return (
     <>
       {/* Floating Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-9999">
         <button
           onClick={toggleChat}
           className={`w-14 h-14 rounded-full flex items-center justify-center cursor-pointer  text-white ${isOpen? " bg-[#a886cd] " : " bg-[#3D4492]"} text-2xl shadow-lg hover:scale-105 transition`}
@@ -85,7 +85,7 @@ const WhatsAppWidget: React.FC = () => {
 
       {/* Chat Box */}
       <div
-        className={`fixed bottom-20 right-6 w-80 bg-[#f4f1ea] rounded-xl shadow-2xl overflow-hidden z-40 transition-all duration-300 pb-6 ${
+        className={`fixed bottom-20 right-6 w-80 bg-[#f4f1ea] rounded-xl shadow-2xl overflow-hidden z-999999 transition-all duration-300 pb-6 ${
           isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
         }`}
       >

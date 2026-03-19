@@ -20,6 +20,7 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: '', slug: '', description: '' });
   const [saving, setSaving] = useState(false);
@@ -36,18 +37,28 @@ export default function CategoriesPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchCategories(); }, []);
 
+  function openModal() {
+    setShowForm(true);
+    setTimeout(() => setFormVisible(true), 10);
+  }
+
+  function closeModal() {
+    setFormVisible(false);
+    setTimeout(() => setShowForm(false), 250);
+  }
+
   function openAdd() {
     setEditingId(null);
     setFormData({ name: '', slug: '', description: '' });
     setError('');
-    setShowForm(true);
+    openModal();
   }
 
   function openEdit(cat: Category) {
     setEditingId(cat.id);
     setFormData({ name: cat.name, slug: cat.slug, description: cat.description || '' });
     setError('');
-    setShowForm(true);
+    openModal();
   }
 
   function handleNameChange(name: string) {
@@ -72,7 +83,7 @@ export default function CategoriesPage() {
     if (error) {
       setError(error.message.includes('unique') ? 'Category name already exists' : error.message);
     } else {
-      setShowForm(false);
+      closeModal();
       fetchCategories();
     }
     setSaving(false);
@@ -101,11 +112,16 @@ export default function CategoriesPage() {
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-250 ${formVisible ? "bg-black/50" : "bg-black/0"}`}
+          onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+        >
+          <div
+            className={`bg-white rounded-xl shadow-2xl w-full max-w-md p-6 transition-all duration-250 ${formVisible ? "scale-100 opacity-100" : "scale-90 opacity-0"}`}
+          >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold">{editingId ? 'Edit Category' : 'Add Category'}</h2>
-              <button onClick={() => setShowForm(false)} className="p-1 hover:bg-gray-100 rounded">
+              <button onClick={closeModal} className="p-1 hover:bg-gray-100 rounded">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -149,7 +165,7 @@ export default function CategoriesPage() {
 
             <div className="flex gap-3 mt-6">
               <button
-                onClick={() => setShowForm(false)}
+                onClick={closeModal}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel

@@ -17,7 +17,8 @@ function mapProduct(row: any): Product {
     price: row.price,
     currency: 'NGN',
     image: row.image_url || row.image || '',
-    category: row.category_id || row.category || '',
+    // Use joined category name if available, fallback to category_id or category
+    category: row.categories?.name || row.category || '',
     inStock: row.stock == null ? true : row.stock > 0,
     featured: row.is_featured ?? row.featured ?? false,
     sales: row.sales ?? 0,
@@ -30,7 +31,7 @@ export async function getProducts(): Promise<Product[]> {
   
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select('*, categories(name)')
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -46,7 +47,7 @@ export async function getProductById(id: string): Promise<Product | null> {
   
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select('*, categories(name)')
     .eq('id', id)
     .single();
 
@@ -74,7 +75,7 @@ export async function getCart(userId: string) {
       .from('cart_items')
       .select(`
         *,
-        products (*)
+        products (*, categories(name))
       `)
       .eq('user_id', userId);
 
@@ -199,7 +200,7 @@ export async function getWishlist(userId: string) {
       .from('wishlist')
       .select(`
         *,
-        products (*)
+        products (*, categories(name))
       `)
       .eq('user_id', userId);
 

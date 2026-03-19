@@ -150,7 +150,7 @@ export function UserMenu({ isMobile = false, onNavigate, showOnlyLogout = false 
       onMouseLeave={() => setIsOpen(false)}
     >
       <button
-        className="hover:opacity-80 transition-opacity flex items-center justify-center h-[40px] w-[40px] rounded-full overflow-hidden border-2 border-gray-200"
+        className="hover:opacity-80 transition-opacity flex items-center justify-center h-[35px] w-[35px] rounded-full overflow-hidden border-2 border-gray-200"
         aria-label="User menu"
       >
         {userAvatar ? (

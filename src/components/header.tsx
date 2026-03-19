@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { Heart, ShoppingCart, Search, Menu, X, ChevronDown } from "lucide-react";
 import { CurrencySelector } from "./currency-selector";
-import { useEffect, useRef } from "react";
-import { getCart, getWishlist } from "@/lib/storage";
+import { useEffect } from "react";
 import { UserMenu } from "./user-menu";
 import Image from "next/image";
 import { useUIStore } from "@/stores/ui-store";
@@ -43,14 +42,12 @@ export function Header() {
     isScrolled,
     isHeaderVisible,
     searchOpen,
-    searchQuery,
     mobileMenuOpen,
     aboutDropdownOpen,
     setCartCount,
     setWishlistCount,
     setIsScrolled,
     setIsHeaderVisible,
-    setSearchQuery,
     setMobileMenuOpen,
     setAboutDropdownOpen,
     toggleSearch,
@@ -117,15 +114,6 @@ export function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [setIsScrolled, setIsHeaderVisible]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/products?search=${encodeURIComponent(
-        searchQuery
-      )}`;
-    }
-  };
 
   return (
     <>
