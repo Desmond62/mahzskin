@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { CartDrawer } from "@/components/cart-drawer"
+import { WelcomeBanner } from "@/components/welcome-banner"
 
 export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -35,6 +36,7 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   // Regular pages: full layout
   return (
     <>
+      <WelcomeBanner />
       <Header />
       <main>{children}</main>
       <Footer />

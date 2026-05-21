@@ -65,11 +65,6 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (!user) {
-      window.location.href = "/auth/login";
-      return;
-    }
 
     // Check if user is online
     if (!navigator.onLine) {
@@ -99,11 +94,6 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
   const handleBuyNow = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (!user) {
-      window.location.href = "/auth/login";
-      return;
-    }
 
     // Check if user is online
     if (!navigator.onLine) {
@@ -135,11 +125,6 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
   const handleToggleWishlist = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (!user) {
-      window.location.href = "/auth/login";
-      return;
-    }
 
     // Check if user is online
     if (!navigator.onLine) {
