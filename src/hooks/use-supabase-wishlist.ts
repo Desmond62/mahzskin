@@ -15,6 +15,7 @@ const GUEST_WISHLIST_KEY = "mahzskin_guest_wishlist";
 interface GuestWishlistItem {
   productId: string;
   wishlistItemId: string;
+  product?: Product;
 }
 
 function getGuestWishlist(): GuestWishlistItem[] {
@@ -41,14 +42,15 @@ export function useSupabaseWishlist() {
   const [loading, setLoading] = useState(true);
 
   const loadWishlist = useCallback(async () => {
-    // Guest: load from localStorage (product details are minimal — just IDs)
+    // Guest: load from localStorage with full product details
     if (!user) {
       const guestItems = getGuestWishlist();
-      // Build minimal WishlistItem shapes so the UI can check membership by id
-      const items = guestItems.map((g) => ({
-        id: g.productId,
-        wishlistItemId: g.wishlistItemId,
-      })) as WishlistItem[];
+      const items = guestItems
+        .filter((g) => g.product) // only items that have full product data
+        .map((g) => ({
+          ...g.product!,
+          wishlistItemId: g.wishlistItemId,
+        })) as WishlistItem[];
       setWishlist(items);
       setLoading(false);
       return;
@@ -96,7 +98,7 @@ export function useSupabaseWishlist() {
     return () => window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
   }, [loadWishlist]);
 
-  const addToWishlist = async (productId: string) => {
+  const addToWishlist = async (productId: string, product?: Product) => {
     // Logged-in user: save to Supabase
     if (user) {
       const added = await addToWishlistDB(user.id, productId);
@@ -107,12 +109,12 @@ export function useSupabaseWishlist() {
       return added;
     }
 
-    // Guest: save to localStorage
+    // Guest: save full product to localStorage so wishlist page can render correctly
     const guestItems = getGuestWishlist();
     const alreadyIn = guestItems.some((g) => g.productId === productId);
     if (alreadyIn) return false;
 
-    guestItems.push({ productId, wishlistItemId: `guest-wl-${productId}` });
+    guestItems.push({ productId, wishlistItemId: `guest-wl-${productId}`, product });
     saveGuestWishlist(guestItems);
     await loadWishlist();
     window.dispatchEvent(new Event("wishlistUpdated"));

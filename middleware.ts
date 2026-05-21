@@ -31,18 +31,7 @@ export async function middleware(request: NextRequest) {
   // Refresh session if expired
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protected routes that require authentication
-  const protectedRoutes = ['/checkout']
-  const path = request.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
-
-  // Redirect to login if accessing protected route without authentication
-  if (isProtectedRoute && !user) {
-    const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/auth/login'
-    redirectUrl.searchParams.set('redirectTo', path)
-    return NextResponse.redirect(redirectUrl)
-  }
+  // No protected routes — guests can access everything including checkout
 
   return supabaseResponse
 }

@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { getCart as getSupabaseCart, addToCart as addToCartDB, removeFromCart as removeFromCartDB, updateCartItemQuantity } from "@/lib/supabase/database";
-import { getCart as getLocalCart, saveCart as saveLocalCart } from "@/lib/storage";
 import { useSupabaseAuth } from "./use-supabase-auth";
 import type { Product } from "@/lib/types";
 
@@ -92,7 +91,7 @@ export function useSupabaseCart() {
     return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, [loadCart]);
 
-  const addToCart = async (productId: string, quantity: number = 1) => {
+  const addToCart = async (productId: string, quantity: number = 1, product?: Product) => {
     // Logged-in user: save to Supabase
     if (user) {
       await addToCartDB(user.id, productId, quantity);
@@ -101,16 +100,20 @@ export function useSupabaseCart() {
       return;
     }
 
-    // Guest: save to localStorage
+    // Guest: save full product details to localStorage so cart can render correctly
     const guestCart = getGuestCart();
     const existing = guestCart.find((item) => item.id === productId);
     if (existing) {
       existing.quantity += quantity;
     } else {
-      // We only have the productId here, so store a minimal item.
-      // The full product details come from the cart state which is loaded separately.
-      // We'll store what we have and enrich on load if needed.
-      guestCart.push({ id: productId, quantity, cartItemId: `guest-${productId}` } as CartItem);
+      // Store the full product so image/name/price are available when rendering
+      const fullItem: CartItem = {
+        ...(product as Product),
+        id: productId,
+        quantity,
+        cartItemId: `guest-${productId}`,
+      };
+      guestCart.push(fullItem);
     }
     saveGuestCart(guestCart);
     setCart([...guestCart]);

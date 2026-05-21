@@ -74,7 +74,7 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
     
     setIsAddingToCart(true);
     try {
-      await addToCart(product.id, quantity);
+      await addToCart(product.id, quantity, product);
       showToast(`"${product.name}" (${quantity}x) added to cart!`, "success");
       onClose();
     } catch (error) {
@@ -103,7 +103,7 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
     
     setIsBuying(true);
     try {
-      await addToCart(product.id, quantity);
+      await addToCart(product.id, quantity, product);
       showToast(`"${product.name}" (${quantity}x) added to cart!`, "success");
       // Open cart drawer
       window.dispatchEvent(new Event("toggleCart"));
@@ -141,7 +141,7 @@ export function QuickViewModal({ product, isOpen, isClosing, onClose }: QuickVie
         await removeItem(wishlistItem.wishlistItemId);
         showToast(`"${product.name}" removed from wishlist`, "info");
       } else {
-        await addToWishlist(product.id);
+        await addToWishlist(product.id, product);
         showToast(`"${product.name}" added to wishlist!`, "success");
       }
     } catch (error) {

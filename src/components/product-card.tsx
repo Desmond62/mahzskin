@@ -62,7 +62,7 @@ export function ProductCard({ product, showNewBadge = false, hideOutOfStockOverl
     
     setIsAddingToCart(true);
     try {
-      await addToCart(product.id, 1);
+      await addToCart(product.id, 1, product);
       showToast(`"${product.name}" added to cart!`, "success");
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -97,7 +97,7 @@ export function ProductCard({ product, showNewBadge = false, hideOutOfStockOverl
         await removeItem(wishlistItem.wishlistItemId);
         showToast(`"${product.name}" removed from wishlist`, "info");
       } else {
-        await addToWishlist(product.id);
+        await addToWishlist(product.id, product);
         showToast(`"${product.name}" added to wishlist!`, "success");
       }
     } catch (error) {
