@@ -25,7 +25,7 @@ type SortOption =
 function ProductsContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
-  const { products, loading, error } = useSupabaseProducts();
+  const { products, error } = useSupabaseProducts();
 
   // retry is not needed with supabase hook — just reload
   const retry = () => window.location.reload();

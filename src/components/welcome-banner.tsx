@@ -44,7 +44,7 @@ export function WelcomeBanner() {
               <div className="flex items-center gap-1.5 min-w-0">
                 <Sparkles className="h-3.5 w-3.5 text-[#7a4f2e] shrink-0 mt-0.5" />
                 <p className="text-xs text-[#4a2e1a] font-medium leading-snug">
-                  Welcome to Malz-Skin! Sign in to save your cart &amp; wishlist.
+                  Welcome to Mahz-Skin! Sign in to save your cart &amp; wishlist.
                 </p>
               </div>
               <button

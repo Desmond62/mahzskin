@@ -187,14 +187,6 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 mt-1 shrink-0" />
-                <div>
-                  <p>Kaduna 1, opp. Victory Plaza,</p>
-                  <p>Tradefair,</p>
-                  <p>Lagos</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
